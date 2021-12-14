@@ -1,0 +1,24 @@
+== Workload cluster creation
+
+worker nodes are still being created for MachineDeployment 'tkg-workload-md-0', DesiredReplicas=1 Replicas=1 ReadyReplicas=0 UpdatedReplicas=1, retrying
+
+# Connect to the management-cluster
+kubectl config use-context tanzu-mgt-admin@tanzu-mgt
+kubectl get machinedeployments.cluster.x-k8s.io
+
+== SSH connect
+
+ssh -i $PATH_TO_YOUR_PRIVATE_KEY capv@$NODE_IP
+# Check services
+systemctl --type service
+systemctl status $SERVICE
+sudo journalctl -fu $SERVICE -n300
+
+== Workload Cluster scaling
+
+k logs kapp-controller-6499b8866-nh2sw -n tkg-system
+
+== Cluster upgrade
+
+kubectl logs -n capv-system deploy/capv-controller-manager manager
+k get delete node xx

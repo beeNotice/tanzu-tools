@@ -1,27 +1,13 @@
 #!/bin/bash
 
-###########################################
-# Variables
-###########################################
-
-VM_USER=tanzu
-BIN_FOLDER=/usr/local/bin/
-
-# https://kubernetes.io/releases/
-KUBECTL_VERSION=v1.21.7
-# https://github.com/kubernetes-sigs/kind/releases
-KIND_VERSION=v0.11.1
-
-TKG_VERSION=v1.4.0
-
-
-###########################################
-# Script
-###########################################
-
 # Common
 sudo apt-get update
-sudo apt-get -y install curl jq unzip bash-completion dos2unix
+sudo apt-get -y install curl jq unzip bash-completion dos2unix bash-completion
+sudo snap install yq
+sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' .bashrc
+
+# SSH Key
+ssh-keygen -t rsa -b 4096
 
 # Kubernetes
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
@@ -65,3 +51,23 @@ tanzu plugin clean
 tanzu plugin install --local cli all 
 tanzu plugin list
 cd
+rm tanzu-cli-bundle-linux-amd64.tar
+
+# kubectx & kubens
+git clone https://github.com/ahmetb/kubectx
+cd kubectx
+sudo mv kubectx $BIN_FOLDER/kubectx
+sudo mv kubens $BIN_FOLDER/kubens
+sudo mv completion/*.bash $COMPLETIONS
+cd
+rm -rf kubectx
+
+# Create completions & aliases
+# https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
+sudo kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+sudo tanzu completion bash | sudo tee /etc/bash_completion.d/tanzu > /dev/null
+
+echo 'alias k=kubectl' >>~/.bash_aliases
+echo 'complete -F __start_kubectl k' >>~/.bash_aliases
+echo 'alias kctx=kubectx' >>~/.bash_aliases
+echo 'alias kns=kubens' >>~/.bash_aliases
