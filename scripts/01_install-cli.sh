@@ -39,6 +39,15 @@ gunzip govc_linux_amd64.gz
 sudo mv govc_linux_amd64 $BIN_FOLDER/govc
 chmod +x $BIN_FOLDER/govc
 
+# Helm
+curl -LO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz
+mkdir helm
+tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz -C helm
+sudo mv helm/linux-amd64/helm $BIN_FOLDER/helm
+rm -Rf helm
+rm helm-v${HELM_VERSION}-linux-amd64.tar.gz
+
+
 # Tanzu
 # https://my.vmware.com/en/web/vmware/downloads/info/slug/infrastructure_operations_management/vmware_tanzu_kubernetes_grid/1_x
 cd ~

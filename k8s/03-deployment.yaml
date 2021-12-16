@@ -6,7 +6,7 @@ metadata:
   name: nginx
   namespace: test
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
@@ -18,5 +18,15 @@ spec:
       containers:
       - image: nginx
         name: nginx
-      imagePullSecrets:
-      - name: docker-hub-creds
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm: 
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - nginx
+              topologyKey: "kubernetes.io/hostname"

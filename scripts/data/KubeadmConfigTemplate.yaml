@@ -1,0 +1,66 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: KubeadmConfigTemplate
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"bootstrap.cluster.x-k8s.io/v1alpha3","kind":"KubeadmConfigTemplate","metadata":{"annotations":{},"name":"tanzu-wkl-md-0","namespace":"default"},"spec":{"template":{"spec":{"files":[],"joinConfiguration":{"nodeRegistration":{"criSocket":"/var/run/containerd/containerd.sock","kubeletExtraArgs":{"cloud-provider":"external","tls-cipher-suites":"TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"},"name":"{{ ds.meta_data.hostname }}"}},"preKubeadmCommands":["hostname \"{{ ds.meta_data.hostname }}\"","echo \"::1         ipv6-localhost ipv6-loopback\" \u003e/etc/hosts","echo \"127.0.0.1   localhost\" \u003e\u003e/etc/hosts","echo \"127.0.0.1   {{ ds.meta_data.hostname }}\" \u003e\u003e/etc/hosts","echo \"{{ ds.meta_data.hostname }}\" \u003e/etc/hostname"],"useExperimentalRetryJoin":true,"users":[{"name":"capv","sshAuthorizedKeys":["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCz6s24gMFhKgSu6gTa2ymCELK8eA0B7AicthTA9xd+K+NNTNXrXAyyrVICSquLNZklSBW0CywQiHBPM5Ebij+mmKvV3HsHQhsbz0ctzGf5IVLD7uZm1EWJIMd8d0Mz3Wu91VTq0ifTLDTaj+1nDWYGSwpVqSeTG+GKNiDXdhxrVvrL8tc9QPcLwYrngKGDwNEHHHD4LTtjBgPCKv96jjkGs0gRHyD8r7Qr0B9NXmI81fHe3HLSeg1evZFDsYqGKM3ncKaoLdZ8t1/rKWMjfS3fn25mkUZ9GhYmrEHMhTf2tWu8AMpvS4m4tctgOaXpMw/SkE+tnRa3jVYYHzjRSmwhiTEzlGzSqxP//50WUdpmQXJLUrSVdJKC0vD/X9d/5HU2pqQY1qm1SOyyClB3VyKtBS0iyLxm3SEQRxiWWDcZm6Tf6bOI/87E34T0wl6hsDRFzKw7KVEsQEtuSY4m2pJkj1+ey+QzbLtSqkGB9R4oCGIk6jo8tJv5vBYAslFR+0Y3UwvP1Q4qUfps8+GVrco22/9nORBHEYjz18MGG+NZvBC6YmaKrt334l7gu9lTELWauKcvGnIAhWaSJxvjCrnjD96dJoxWCF/aj1ZNUHVkXWxsx1lKFyzeSX+RfAa+W9S9vBwKlldHWl4DC9ihnJxo/6D6uKnLhI8DbREiR6Nr0Q=="],"sudo":"ALL=(ALL) NOPASSWD:ALL"}]}}}}
+  creationTimestamp: "2021-12-07T14:19:26Z"
+  generation: 1
+  name: tanzu-wkl-md-0
+  namespace: default
+  ownerReferences:
+  - apiVersion: cluster.x-k8s.io/v1alpha3
+    kind: Cluster
+    name: tanzu-wkl
+    uid: 70622f3e-1811-45e6-b8b7-4128a133fd1e
+  resourceVersion: "25837"
+  uid: 7ada3404-0f82-4644-9a7b-96b2dc61dff8
+spec:
+  template:
+    spec:
+      files:
+      - content: |
+          -----BEGIN CERTIFICATE-----
+          MIIDWjCCAkKgAwIBAgIQBxtvpI6jj5ZuYfpcsfOj6jANBgkqhkiG9w0BAQsFADAt
+          MRcwFQYDVQQKEw5Qcm9qZWN0IEhhcmJvcjESMBAGA1UEAxMJSGFyYm9yIENBMB4X
+          DTIxMTIxNTEwNTQxOVoXDTMxMTIxMzEwNTQxOVowLTEXMBUGA1UEChMOUHJvamVj
+          dCBIYXJib3IxEjAQBgNVBAMTCUhhcmJvciBDQTCCASIwDQYJKoZIhvcNAQEBBQAD
+          ggEPADCCAQoCggEBAL2z/ZdlTv0gTKmocAPWMHfs6HvGwZgFjiiZZIDzgBNr0GPZ
+          ns7ik2EQnY/xZoCFdqZtwHd9YAuSuoyqvWPuYearUUorg8u0vRs4LUYEwmqmUgZC
+          4lfQ1jgLuq/U/NedRUtujBnUsOWgRijPDUG9Uu+z5cuqc6ItgMQifoOYHX+G99ZX
+          8vmEfyLYPRSYKaOX9dASFvteqB9cXsqMH4whxqxs/JTb4vF7X1hdSwDx+NcYHizv
+          M1oIRBXS/qzYv4BbH8DQVdcR5dGXmrPtNs8yTlfhG9IeCWTz0RP+vjoZ0LSPkccr
+          eBZhzMjy6aNP/WaOPCbqXNrNh/hYn++pUEfbHM0CAwEAAaN2MHQwDgYDVR0PAQH/
+          BAQDAgIEMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAPBgNVHRMBAf8E
+          BTADAQH/MB0GA1UdDgQWBBSLw9KzaWfy1pk9qamMjbZFiN7t4TATBgNVHREEDDAK
+          gghoYXJib3JjYTANBgkqhkiG9w0BAQsFAAOCAQEAd2+dRsoeUhiUiF8XsSvD3AQc
+          7avRHVdg29v3el71rCIKG5YFXOGrww6i6g446Heb9PatzqQMoIgcjbVgG1whAUQx
+          GlIW+pfr0J9R17She3P1bf97hgLrgpxRC4hzKYU8p4tj8AASc7R0sefwgP847TWW
+          b/DIqF1CuznXGql4vbvdsMKnLQTwYsUoZvqWHvWaJWqxVdd0L8ZJVn6vTReDP+rw
+          Q+s7RoA8SpUB8xBIWVDJTdieYrAXQKVE/x867iN1gfrH1bGzRuOCILj0KpjJBcbV
+          eVGKDZhKHB7/BBdXyVCfJ6bMhhHHQEdwfGR/SzS/xtn8uPG57RjQ9OauzmTA2Q==
+          -----END CERTIFICATE-----
+        owner: root:root
+        permissions: "0644"
+        path: /etc/ssl/certs/tkg-custom-ca.pem
+      joinConfiguration:
+        nodeRegistration:
+          criSocket: /var/run/containerd/containerd.sock
+          kubeletExtraArgs:
+            cloud-provider: external
+            tls-cipher-suites: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+          name: '{{ ds.meta_data.hostname }}'
+      preKubeadmCommands:
+      - hostname "{{ ds.meta_data.hostname }}"
+      - echo "::1         ipv6-localhost ipv6-loopback" >/etc/hosts
+      - echo "127.0.0.1   localhost" >>/etc/hosts
+      - echo "127.0.0.1   {{ ds.meta_data.hostname }}" >>/etc/hosts
+      - echo "{{ ds.meta_data.hostname }}" >/etc/hostname
+      - '! which rehash_ca_certificates.sh 2>/dev/null || rehash_ca_certificates.sh'
+      - '! which update-ca-certificates 2>/dev/null || (mv /etc/ssl/certs/tkg-custom-ca.pem /usr/local/share/ca-certificates/tkg-custom-ca.crt && update-ca-certificates)'
+      useExperimentalRetryJoin: true
+      users:
+      - name: capv
+        sshAuthorizedKeys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCz6s24gMFhKgSu6gTa2ymCELK8eA0B7AicthTA9xd+K+NNTNXrXAyyrVICSquLNZklSBW0CywQiHBPM5Ebij+mmKvV3HsHQhsbz0ctzGf5IVLD7uZm1EWJIMd8d0Mz3Wu91VTq0ifTLDTaj+1nDWYGSwpVqSeTG+GKNiDXdhxrVvrL8tc9QPcLwYrngKGDwNEHHHD4LTtjBgPCKv96jjkGs0gRHyD8r7Qr0B9NXmI81fHe3HLSeg1evZFDsYqGKM3ncKaoLdZ8t1/rKWMjfS3fn25mkUZ9GhYmrEHMhTf2tWu8AMpvS4m4tctgOaXpMw/SkE+tnRa3jVYYHzjRSmwhiTEzlGzSqxP//50WUdpmQXJLUrSVdJKC0vD/X9d/5HU2pqQY1qm1SOyyClB3VyKtBS0iyLxm3SEQRxiWWDcZm6Tf6bOI/87E34T0wl6hsDRFzKw7KVEsQEtuSY4m2pJkj1+ey+QzbLtSqkGB9R4oCGIk6jo8tJv5vBYAslFR+0Y3UwvP1Q4qUfps8+GVrco22/9nORBHEYjz18MGG+NZvBC6YmaKrt334l7gu9lTELWauKcvGnIAhWaSJxvjCrnjD96dJoxWCF/aj1ZNUHVkXWxsx1lKFyzeSX+RfAa+W9S9vBwKlldHWl4DC9ihnJxo/6D6uKnLhI8DbREiR6Nr0Q==
+        sudo: ALL=(ALL) NOPASSWD:ALL

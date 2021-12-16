@@ -22,3 +22,20 @@ k logs kapp-controller-6499b8866-nh2sw -n tkg-system
 
 kubectl logs -n capv-system deploy/capv-controller-manager manager
 k get delete node xx
+
+== Foce Cluster deletion
+# https://vmware.slack.com/archives/CSZCCLW0P/p1622659639142600
+k get cluster -A
+kubectl get machine -A
+kubectl get vspheremachine -A
+
+# Remove machines and finalizers
+kubectl delete machine
+kubectl patch machine <name> -p '{"metadata":{"finalizers":null}}' --type=merge
+kubectl patch vspheremachine <name> -p '{"metadata":{"finalizers":null}}' --type=merge
+kubectl patch cluster <name> -p '{"metadata":{"finalizers":null}}' --type=merge
+
+== Volume is already exclusively attached to one node and can't be attached to another
+
+* Detected on Grafana pod deployment
+* https://kb.vmware.com/s/article/85213

@@ -3,6 +3,14 @@ tanzu cluster scale tanzu-wkl --worker-machine-count 3
 tanzu cluster list --include-management-cluster
 tanzu cluster get tanzu-wkl
 
+# Vertical scale
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-scale-cluster.html#vertical-kubectl
+kubectl get VsphereMachineTemplate tanzu-wkl-worker -o yaml > tanzu-wkl-worker-machine-template.yaml
+# => Update name to tanzu-wkl-worker-updated & size
+k apply -f tanzu-wkl-worker-machine-template.yaml
+k edit MachineDeployment tanzu-wkl-md-0
+# => Update spec.template.spec.infrastructureRef.name field to tanzu-wkl-worker-updated
+
 # Upgrade version
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-upgrade-tkg-workload-clusters.html
 # Import photon-3-kube-v1.20.8+vmware.1-tkg.2-9893064678268559535 OVA
@@ -20,16 +28,7 @@ k apply -f $K8S_FILES_PATH/03-deployment.yaml
 k apply -f $K8S_FILES_PATH/04-service.yaml
 
 # Continuous curl while upgrade
-NGINX_IP=$(kubectl get services --namespace test nginx --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-while sleep 5
-do 
-    response=$(curl --write-out '%{http_code}' --silent --output /dev/null --connect-timeout 2 $NGINX_IP)
-    if [ $response != "200" ]; then
-        echo $response
-    else
-        echo "Ok"
-    fi
-done
+sh $TANZU_TOOLS_FILES_PATH/script/tools/curl-loop.sh
 
 # Perform upgrade
 tanzu cluster available-upgrades get tanzu-wkl-old
