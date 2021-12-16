@@ -5,9 +5,8 @@ metadata:
   namespace: test
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  storageClassName: example-nfs
-
+  storageClassName: nfs-client
