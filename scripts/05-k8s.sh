@@ -24,11 +24,17 @@ kubectl run busybox --image=busybox --rm -it --restart=Never -n test -- /bin/sh
 # Persistent Volumes
 # vSphere Persistent Volumes ReadWriteOnce - 05-pvc.yaml
 k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/01-ReadWriteOnce-pvc.yaml
-kubectl get storageclass
-kubectl  get pvc -n test # Go find it in vCenter > Cluster, Monitor, Cloud Native Storage
+kubectl get pvc -n test # Go find it in vCenter > Cluster, Monitor, Cloud Native Storage
 
+# Test
+k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-pod-pvc.yaml
+kubectl exec nginx -n test -- bash -c "echo 'Hello from pod A' >> /data/hello_world"
+kubectl exec nginx -n test -- bash -c "echo 'Hello from pod A again' >> /data/hello_world"
+kubectl exec nginx -n test -- bash -c "cat /data/hello_world"
 
 # https://docs-staging.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-tanzu-k8s-clusters-storage.html
+# https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-82AC812A-40E3-4563-9329-747634E1AB6E.html
+# https://core.vmware.com/blog/using-readwritemany-volumes-tkg-clusters
 # https://www.tecmint.com/how-to-setup-nfs-server-in-linux/
 
 # Deploy NFS Server
@@ -47,36 +53,48 @@ exportfs -ra
 systemctl start nfs-server.service
 showmount -e  10.213.73.203
 
+# You can add Datastore in VSphere
+# https://docs.vmware.com/en/VMware-vSphere-Container-Storage-Plug-in/2.0/vmware-vsphere-csp-getting-started/GUID-606E179E-4856-484C-8619-773848175396.html
+# Deploy Storage Class
+
+# Register NFS Storage in vSphere.
+# This way, we'll use the created StorageClass
 # https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/
-# External provisioner
+# External provisioner - Required only for direct test to NFS without binding it to vSphere
 # k8s NFS requires a provisionner : https://kubernetes.io/docs/concepts/storage/storage-classes/#nfs
+NFS_SERVER_IP=10.213.73.203
+NFS_PATH=/mnt/nfs_share
+
 helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
 k create ns nfs-subdir-external-provisioner
 helm install nfs-subdir-external-provisioner \
 --namespace nfs-subdir-external-provisioner \
---set nfs.server=10.213.73.203 \
---set nfs.path=/mnt/nfs_share \
+--set nfs.server=$NFS_SERVER_IP \
+--set nfs.path=$NFS_PATH \
 nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
 
-# Check
-k get sc
+# Check new StorageClass
+k get sc nfs-client -o yaml
+k get deploy nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner -o yaml
 
-# Add Datastore in VSphere
-# https://docs.vmware.com/en/VMware-vSphere-Container-Storage-Plug-in/2.0/vmware-vsphere-csp-getting-started/GUID-606E179E-4856-484C-8619-773848175396.html
-# Update datastoreurl with govc datastore.info Datastore
+# Create PVC using the given Storage Class
 k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-ReadWriteMany-pvc.yaml
 k get pvc,pv -n test
 
 # Tests
-kubectl exec nginx-pvc-6c7546b977-jjrbz -n test -- bash -c "echo 'Hello from pod A' >> /data/hello_world"
-kubectl exec nginx-pvc-6c7546b977-ltjv7 -n test -- bash -c "echo 'Hello from pod B' >> /data/hello_world"
-kubectl exec nginx-pvc-6c7546b977-z7zlq -n test -- bash -c "cat /data/hello_world"
+k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/03-deployment-pvc.yaml
+k get pods -n test
+kubectl exec nginx-pvc-6c7546b977-mnhmm -n test -- bash -c "echo 'Hello from pod A' >> /data/hello_world"
+kubectl exec nginx-pvc-6c7546b977-msn6l -n test -- bash -c "echo 'Hello from pod B' >> /data/hello_world"
+kubectl exec nginx-pvc-6c7546b977-wtlvw -n test -- bash -c "cat /data/hello_world"
 
-# Check on NFS
+# Check NFS ont the NFS Server
 ls /mnt/nfs_share/
 
-# Remove External Provisioner
-helm delete nfs-subdir-external-provisioner -n ns nfs-subdir-external-provisioner
+# Clean up
+k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/03-deployment-pvc.yaml
+k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-ReadWriteMany-pvc.yaml
+helm delete nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner
 
 # Check Envoy
 ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')

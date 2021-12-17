@@ -4,6 +4,12 @@
 # https://vault.vmware.com/group/nsx/avi-networks-technical-resources
 # https://pez-portal-staging.int-apps.pcfone.io/user/kb?id=7
 
+# VMD not available yet for AVI
+# vmd get products
+# vmd get subproducts -p vmware_nsx_advanced_load_balancer
+# vmd get versions -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc
+# vmd get files -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc -v 20.1.x
+
 # Import AVI image
 replace_json() {
 	# ${1} : Source File

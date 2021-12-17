@@ -39,3 +39,17 @@ kubectl patch cluster <name> -p '{"metadata":{"finalizers":null}}' --type=merge
 
 * Detected on Grafana pod deployment
 * https://kb.vmware.com/s/article/85213
+
+
+== Velero
+
+k logs velero-5f78f75d56-b7lfn -n velero
+
+# Check Minio connectivity
+mc alias set minio http://10.213.73.47:9000 admin T6PoL7CnyU1nBOZxG4a4c6Je4mOXY5PIeLREVmkJ
+mc ls minio
+
+# Velero uninstall doesn't remove backupstoragelocations.velero.io
+k get crd | grep velero
+k get backupstoragelocations.velero.io -n velero
+k edit backupstoragelocations.velero.io default -n velero

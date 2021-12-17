@@ -33,6 +33,12 @@ curl -L https://carvel.dev/install.sh -o install-carvel.sh
 sudo bash install-carvel.sh
 rm install-carvel.sh
 
+# Download software from customerconnect.vmware.com
+# https://github.com/laidbackware/vmd
+curl -LO  https://github.com/laidbackware/vmd/releases/download/v$VMD_VERSION/vmd-linux-v$VMD_VERSION
+sudo mv vmd-linux-v$VMD_VERSION $BIN_FOLDER/vmd
+chmod +x $BIN_FOLDER/vmd
+
 # VMware vSphere API
 curl -LO  https://github.com/vmware/govmomi/releases/download/v0.23.0/govc_linux_amd64.gz
 gunzip govc_linux_amd64.gz
@@ -47,7 +53,6 @@ sudo mv helm/linux-amd64/helm $BIN_FOLDER/helm
 rm -Rf helm
 rm helm-v${HELM_VERSION}-linux-amd64.tar.gz
 
-
 # Tanzu
 # https://my.vmware.com/en/web/vmware/downloads/info/slug/infrastructure_operations_management/vmware_tanzu_kubernetes_grid/1_x
 cd ~
@@ -61,6 +66,18 @@ tanzu plugin install --local cli all
 tanzu plugin list
 cd
 rm tanzu-cli-bundle-linux-amd64.tar
+
+# Velero
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-backup-restore-mgmt-cluster.html#cli
+# https://customerconnect.vmware.com/en/downloads/details?downloadGroup=TKG-140&productId=988&rPId=73652
+gzip -d velero-linux-v1.6.2_vmware.1.gz
+sudo mv velero-linux-v1.6.2_vmware.1 $BIN_FOLDER/velero
+chmod +x $BIN_FOLDER/velero
+
+# Minio
+wget https://dl.min.io/client/mc/release/linux-amd64/mc
+sudo mv mc $BIN_FOLDER/mc
+chmod +x $BIN_FOLDER/mc
 
 # kubectx & kubens
 git clone https://github.com/ahmetb/kubectx

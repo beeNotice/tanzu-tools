@@ -27,10 +27,15 @@ HELM_VERSION=3.7.2
 TKG_VERSION=v1.4.0
 # Path to save completions
 COMPLETIONS=/etc/bash_completion.d
+# https://github.com/laidbackware/vmd/releases
+VMD_VERSION=0.3.0
 
 ###########################################
 # OVAs
 ###########################################
+export VMD_USER=fmartin@vmware.com
+export VMD_PASS=xxx
+
 # Photon v3 Kubernetes v1.21.2 OVA
 TKG_VM_DIR="TKG"
 OVA_NAME=photon-3-kube-v1.21.2+vmware.1-tkg.2-12816990095845873721

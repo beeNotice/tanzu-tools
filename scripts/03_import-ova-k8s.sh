@@ -2,6 +2,11 @@
 # https://github.com/laidbackware/vmd
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-vsphere.html#import-base
 
+# vmd get versions -p vmware_tanzu_kubernetes_grid -s tkg
+# vmd get files -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.0
+vmd download -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.0 -f $OVA_FILE --accepteula
+cd ~/vmd-downloads/
+
 # Create Ressource Pool
 govc pool.create $GOVC_RESOURCE_POOL
 
@@ -15,5 +20,6 @@ govc import.ova -options=${OVA_NAME}.json ${OVA_FILE}
 govc vm.markastemplate ${OVA_NAME}
 govc object.mv /${GOVC_DATACENTER}/vm/${OVA_NAME} /${GOVC_DATACENTER}/vm/${TKG_VM_DIR}
 
-# Remove data
+# Restore state
 rm ${OVA_NAME}.json
+cd -
