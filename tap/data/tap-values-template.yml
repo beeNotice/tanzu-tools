@@ -1,0 +1,71 @@
+profile: full
+excluded_packages:
+  - learningcenter.tanzu.vmware.com
+  - workshops.learningcenter.tanzu.vmware.com
+  - ootb-supply-chain-testing.tanzu.vmware.com
+
+buildservice:
+  kp_default_repository: 'harbor.withtanzu.com/fmartin/build-service/'
+  kp_default_repository_username: ""
+  kp_default_repository_password: ""
+  tanzunet_username: ""
+  tanzunet_password: ""
+  descriptor_name: "tap-1.0.0-lite"
+  enable_automatic_dependency_updates: false
+
+supply_chain: basic
+
+ootb_supply_chain_basic:
+  service_account: default
+  cluster_builder: default
+  registry:
+    server: 'harbor.withtanzu.com'
+    repository: 'fmartin/tanzu-app-tap'
+  gitops:
+    # Leave empty for public repos, add a secret for private repos.
+    ssh_secret: ""
+
+learningcenter:
+  ingressDomain: "learningcenter.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io" # Replace IP with your minikube IP
+
+tap_gui:
+  service_type: ClusterIP
+  ingressEnabled: "true"
+  ingressDomain: "aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io" # Replace IP with your minikube IP
+  app_config:
+    app:
+        baseUrl: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
+    integrations:
+      github: 
+        - host: github.com
+          token: 
+    catalog:
+      locations:
+        - type: url
+          # Replace with your own, or just use this one as a blank catalog.
+          target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
+    backend:
+        baseUrl: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
+        cors:
+            origin: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
+
+grype:
+  namespace: "default" # (optional) Defaults to default namespace.
+  targetImagePullSecret: "registry-credentials"
+
+contour:
+  envoy:
+    service:
+      type: NodePort
+      nodePorts:
+        http: 30080
+        https: 30443
+
+cnrs:
+  provider: local
+  domain_name: "aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io" # Replace IP with your minikube IP
+
+ceip_policy_disclosed: true
+
+metadata_store:
+  app_service_type: 'NodePort'

@@ -1,2 +1,9 @@
+00_pass.sh
 binaries/
 k8s/02-secret.yaml
+tap/data/github-secret.yaml
+tap/data/tap-values-full.yml
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl

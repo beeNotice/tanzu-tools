@@ -1,0 +1,53 @@
+= TKgs deployment
+
+== Prerequisites
+
+Prerequisites for Configuring vSphere with Tanzu on a Cluster
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-EE236215-DA4D-4579-8BEB-A693D1882C77.html
+
+System Requirements for Setting Up vSphere with Tanzu with vSphere Networking and NSX Advanced Load Balancer
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-7FF30A74-DDDD-4231-AAAE-0A92828B93CD.html
+
+== Steps
+
+Configuring vSphere Networking and NSX Advanced Load Balancer for vSphere with Tanzu
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-8908FAD7-9343-491B-9F6B-45FA8893C8CC.html
+
+=== AVI installation
+
+Topology for Supervisor Cluster with vSphere Networking and NSX Advanced Load Balancer
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-489A842E-1A74-4A94-BC7F-354BDB780751.html
+
+Install and Configure the NSX Advanced Load Balancer
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-AC9A7044-6117-46BC-9950-5367813CD5C1.html
+
+WARN: The control plane VM 4223ffface6ece4c6a5323507e4b166e was unable to authenticate to the load balancer
+With the new version, we need to enable in AVI : Administration > Settings > Access Settings > Allow Basic Authentication
+
+=== Supervisor Cluster
+
+Prerequisites for Configuring vSphere with Tanzu on a Cluster
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-EE236215-DA4D-4579-8BEB-A693D1882C77.html
+
+=== Workload deployment
+
+Create and Configure a vSphere Namespace
+https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-177C23C4-ED81-4ADD-89A2-61654C18201B.html
+
+=== Details
+
+Download AVI OVA (20.1.7)
+https://customerconnect.vmware.com/downloads/info/slug/networking_security/vmware_nsx_advanced_load_balancer/20_1_x
+
+== Annexes
+
+=== Versions
+
+Jumpbox : Ubuntu 18.04.3
+AVI : 20.1.7
+vSphere with Tanzu : 7.0
+
+=== Resources
+
+vSphere with Tanzu Quick Bytes
+https://www.youtube.com/playlist?list=PLymLY4xJSThplrNcSTTaa9iFU016J7gaI

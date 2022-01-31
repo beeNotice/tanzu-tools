@@ -1,60 +1,30 @@
-#!/bin/bash
-
-# Launch GUI
-tanzu management-cluster create --ui --browser none
-# Retrieve SSH Key
-cat /home/tanzu/.ssh/id_rsa.pub
-
-# Proxy configuration
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-tanzu-config-reference.html#proxy-configuration-5
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-create-config-file.html#proxies
-
-# Create management
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-config-vsphere.html
-tanzu management-cluster create --file /home/tanzu/tanzu-mgt.yaml
-
-# Check management
-tanzu management-cluster get
-tanzu management-cluster kubeconfig get --admin
-kubectl config use-context tanzu-mgt-admin@tanzu-mgt
-
-kubectl get nodes -o wide
-ssh capv@$node-ip
-k get pods -A
-
-# Create workload
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-tanzu-k8s-clusters-vsphere.html#tanzu-kubernetes-cluster-template-0
-tanzu cluster create --file tanzu-wkl.yaml
-
-# Check workload
-tanzu cluster list
-tanzu cluster kubeconfig get tanzu-wkl --admin
-kubectl config use-context tanzu-wkl-admin@tanzu-wkl
-
-kubectl get nodes -o wide
-ssh capv@$node-ip
-k get pods -A
-
+###########################################
 # Cert Manager
+###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-cert-manager.html
 kubectl create ns $USER_PACKAGE_NAMESPACE
 tanzu package available list cert-manager.tanzu.vmware.com -A
 
+# The namespace flag is used to determine where the app resource is created but not where cert-manager itself is deployed.
 tanzu package install cert-manager \
 --package-name cert-manager.tanzu.vmware.com \
 --namespace $USER_PACKAGE_NAMESPACE \
---version $CERT_MANAGER_VERSION
+--version $CERT_MANAGER_VERSION \
+--values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/cert-manager-data-values.yaml
 
 kubectl get apps -A
 kubectl get pods -n cert-manager
 
+###########################################
 # Contour (requires Cert Manager)
+###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-ingress-contour.html
 tanzu package available list contour.tanzu.vmware.com -A
+
 tanzu package install contour \
 --package-name contour.tanzu.vmware.com \
 --version $CONTOUR_VERSION \
---values-file $TANZU_TOOLS_FILES_PATH/scripts/data/contour-data-values.yaml \
+--values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/contour-data-values.yaml \
 --namespace $USER_PACKAGE_NAMESPACE
 
 # Check k8s
@@ -66,21 +36,30 @@ kubectl get pods -n tanzu-system-ingress
 ENVOY_POD=$(kubectl -n tanzu-system-ingress get pod -l app=envoy -o name | head -1)
 kubectl -n tanzu-system-ingress port-forward $ENVOY_POD 9001
 
+
+###########################################
 # Prometheus
+###########################################
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-prometheus.html
 tanzu package available list prometheus.tanzu.vmware.com -A
 
 tanzu package install prometheus \
 --package-name prometheus.tanzu.vmware.com \
 --namespace $USER_PACKAGE_NAMESPACE \
---version $PROMETHEUS_VERSION
+--version $PROMETHEUS_VERSION \
+--values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/prometheus-data-values.yaml
 
+# Check
+k get pods -n tanzu-system-monitoring
 tanzu package installed list -A
 
+###########################################
 # Grafana
+###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-grafana.html
 tanzu package available list grafana.tanzu.vmware.com -A
 
-image_url=$(kubectl -n tanzu-package-repo-global get packages grafana.tanzu.vmware.com.$GRAFANA_VERSION -o jsonpath='{.spec.template.spec.fetch[0].imgpkgBundle.image}')
+image_url=$(kubectl -n $USER_PACKAGE_NAMESPACE get packages grafana.tanzu.vmware.com.$GRAFANA_VERSION -o jsonpath='{.spec.template.spec.fetch[0].imgpkgBundle.image}')
 imgpkg pull -b $image_url -o /tmp/grafana-package-$GRAFANA_VERSION
 cp /tmp/grafana-package-$GRAFANA_VERSION/config/values.yaml grafana-data-values.yaml
 
@@ -99,6 +78,8 @@ rm grafana-data-values.yaml
 tanzu package installed list -A
 
 GRAFANA_IP=$(kubectl get services grafana -n tanzu-system-dashboards --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+
 # https://grafana.com/grafana/dashboards/
 # Metrics
 topk(10, count by (__name__)({__name__=~".+"}))
@@ -109,7 +90,9 @@ sum(kube_pod_status_phase{phase="Running"})
 sum(kube_persistentvolume_info)
 
 
+###########################################
 # Fluent Bit
+###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-logging-fluentbit.html
 
 # ELK (requires at least 3 nodes)
@@ -157,14 +140,15 @@ GET /logstash-*/_search
   }
 }
 
-
 # Remove ELK
 helm uninstall kibana -n kibana
 helm uninstall elasticsearch -n elasticsearch
 k get pvc -n elasticsearch
 tanzu package installed delete fluent-bit --namespace $USER_PACKAGE_NAMESPACE
 
+###########################################
 # Harbor
+###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-harbor-registry.html
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-external-dns.html
 

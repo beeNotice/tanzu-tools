@@ -3,7 +3,7 @@
 ###########################################
 export GOVC_URL="vcsa-01.haas-489.pez.vmware.com"
 export GOVC_USERNAME="administrator@vsphere.local"
-export GOVC_PASSWORD="M8bZ0lzQB1nlswl3NA!"
+export GOVC_PASSWORD=""
 export GOVC_DATACENTER="Datacenter"
 export GOVC_NETWORK="Extra"
 export GOVC_DATASTORE="LUN01"

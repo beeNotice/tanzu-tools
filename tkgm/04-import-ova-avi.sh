@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-install-nsx-adv-lb.html
-# https://vault.vmware.com/group/nsx/avi-networks-technical-resources
 # https://pez-portal-staging.int-apps.pcfone.io/user/kb?id=7
 
 # VMD not available yet for AVI
@@ -9,6 +8,10 @@
 # vmd get subproducts -p vmware_nsx_advanced_load_balancer
 # vmd get versions -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc
 # vmd get files -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc -v 20.1.x
+
+# AVI files are available on Vault
+# https://vault.vmware.com/group/nsx/avi-networks-technical-resources
+curl -L "http://..." -o controller-20.1.7-9154.ova
 
 # Import AVI image
 replace_json() {

@@ -12,10 +12,13 @@ kubectl create secret docker-registry docker-hub-creds \
 -o yaml > $K8S_FILES_PATH/02-secret.yaml
 
 # Update default SA to use this credential
+k apply -f $K8S_FILES_PATH/02-secret.yaml
 kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "docker-hub-creds"}]}' --namespace=test
 
 # Deploy k8s objects
-k apply -f $K8S_FILES_PATH/xxx
+k apply -f $K8S_FILES_PATH/01-namespace.yaml
+k apply -f $K8S_FILES_PATH/03-deployment
+k apply -f $K8S_FILES_PATH/04-service.yaml
 k get svc -n test
 kubectl exec -it nginx-f6ccb5668-22k9t -n test -- /bin/bash
 kubectl exec nginx-f6ccb5668-22k9t -n test -- curl 100.69.237.145

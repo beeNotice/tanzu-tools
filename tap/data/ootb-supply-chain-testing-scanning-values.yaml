@@ -1,0 +1,14 @@
+registry:
+  server: 'harbor.withtanzu.com'
+  repository: 'fmartin/tanzu-app-tap'
+
+gitops:
+  repository_prefix: git@github.com:beeNotice/
+  branch: main
+  user_name: tanzu-test
+  user_email: tanzu-test@cluster.azure
+  commit_message: "TAP - New version"
+  ssh_secret: "git-ssh" # name of the secret in github-secret.yaml
+
+cluster_builder: default
+service_account: default

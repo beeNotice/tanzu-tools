@@ -1,4 +1,3 @@
----
 infrastructure_provider: vsphere
 namespace: tanzu-system-ingress
 contour:

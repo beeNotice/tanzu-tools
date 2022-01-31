@@ -9,6 +9,10 @@ sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' .bashrc
 # SSH Key
 ssh-keygen -t rsa -b 4096
 
+# vSphere SSL certificate
+# https://kb.vmware.com/s/article/2108294
+
+
 # Kubernetes
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 curl -LO https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
@@ -57,7 +61,7 @@ rm helm-v${HELM_VERSION}-linux-amd64.tar.gz
 # https://my.vmware.com/en/web/vmware/downloads/info/slug/infrastructure_operations_management/vmware_tanzu_kubernetes_grid/1_x
 cd ~
 mkdir tanzu
-tar xvf tanzu-cli-bundle-linux-amd64.tar -C tanzu 
+tar xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-cli-bundle-linux-amd64.tar -C tanzu 
 cd ~/tanzu/cli 
 sudo install core/$TKG_VERSION/tanzu-core-linux_amd64 $BIN_FOLDER/tanzu 
 cd ~/tanzu
@@ -65,7 +69,6 @@ tanzu plugin clean
 tanzu plugin install --local cli all 
 tanzu plugin list
 cd
-rm tanzu-cli-bundle-linux-amd64.tar
 
 # Velero
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-backup-restore-mgmt-cluster.html#cli
