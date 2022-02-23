@@ -63,7 +63,7 @@ tanzu package available list --namespace tap-install
 tanzu package install tap \
      -p tap.tanzu.vmware.com \
      -v $TAP_VERSION \
-     --values-file $TAP_FILES_PATH/data/tap-values-template.yml \
+     --values-file $TAP_FILES_PATH/data/tap-values-full.yml \
      -n tap-install
 
 # Check
@@ -164,6 +164,24 @@ subjects:
 
 EOF
 
+# Access Apps
+kubectl get service envoy -n tanzu-system-ingress
+# Create DNS entry to this IP or add it to the host C:\Windows\System32\drivers\etc
+http://tap-gui.fmartin.tech/
+
 # Start / Stop AKS
 az aks start --resource-group rg-tanzu-tap --name aks-tanzu-tap
 az aks stop --resource-group rg-tanzu-tap --name aks-tanzu-tap
+
+# Update tap
+tanzu package installed update tap \
+     -p tap.tanzu.vmware.com \
+     -v $TAP_VERSION \
+     --values-file $TAP_FILES_PATH/data/tap-values-full.yml \
+     -n tap-install
+
+# TBS Configuration
+kp clusterstack create old \
+--build-image registry.pivotal.io/tanzu-base-bionic-stack/build@sha256:46fcb761f233e134a92b780ac10236cc1c2e6b19d590b2b3b4d285d3f8fd9ecf \
+--run-image registry.pivotal.io/tanzu-base-bionic-stack/run@sha256:b6b1612ab2dfa294514fff2750e8d724287f81e89d5e91209dbdd562ed7f7daf
+

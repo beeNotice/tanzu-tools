@@ -12,7 +12,6 @@ ssh-keygen -t rsa -b 4096
 # vSphere SSL certificate
 # https://kb.vmware.com/s/article/2108294
 
-
 # Kubernetes
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 curl -LO https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
@@ -61,7 +60,7 @@ rm helm-v${HELM_VERSION}-linux-amd64.tar.gz
 # https://my.vmware.com/en/web/vmware/downloads/info/slug/infrastructure_operations_management/vmware_tanzu_kubernetes_grid/1_x
 cd ~
 mkdir tanzu
-tar xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-cli-bundle-linux-amd64.tar -C tanzu 
+tar xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-cli-1.4.2-bundle-linux-amd64.tar -C tanzu 
 cd ~/tanzu/cli 
 sudo install core/$TKG_VERSION/tanzu-core-linux_amd64 $BIN_FOLDER/tanzu 
 cd ~/tanzu
@@ -73,8 +72,8 @@ cd
 # Velero
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-backup-restore-mgmt-cluster.html#cli
 # https://customerconnect.vmware.com/en/downloads/details?downloadGroup=TKG-140&productId=988&rPId=73652
-gzip -d velero-linux-v1.6.2_vmware.1.gz
-sudo mv velero-linux-v1.6.2_vmware.1 $BIN_FOLDER/velero
+gzip -d $TANZU_TOOLS_FILES_PATH/binaries/velero-linux-v1.6.2_vmware.1.gz
+sudo mv $TANZU_TOOLS_FILES_PATH/binaries/velero-linux-v1.6.2_vmware.1 $BIN_FOLDER/velero
 chmod +x $BIN_FOLDER/velero
 
 # Minio

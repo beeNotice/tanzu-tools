@@ -17,7 +17,7 @@ kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "docker-
 
 # Deploy k8s objects
 k apply -f $K8S_FILES_PATH/01-namespace.yaml
-k apply -f $K8S_FILES_PATH/03-deployment
+k apply -f $K8S_FILES_PATH/03-deployment.yaml
 k apply -f $K8S_FILES_PATH/04-service.yaml
 k get svc -n test
 kubectl exec -it nginx-f6ccb5668-22k9t -n test -- /bin/bash

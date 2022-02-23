@@ -12,7 +12,7 @@ spec:
       class: best-effort-medium
       storageClass: tanzu
     workers:
-      count: 3
+      count: 1
       class: best-effort-large
       storageClass: tanzu
       volumes: # optional setting required for TBS

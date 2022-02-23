@@ -3,7 +3,7 @@ registry:
   repository: 'fmartin/tanzu-app-tap'
 
 gitops:
-  repository_prefix: git@github.com:beeNotice/
+  repository_prefix: ssh://git@github.com/beeNotice/
   branch: main
   user_name: tanzu-test
   user_email: tanzu-test@cluster.azure

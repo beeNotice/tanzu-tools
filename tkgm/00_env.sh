@@ -14,7 +14,7 @@ export GOVC_INSECURE=1
 # Jumpbox
 ###########################################
 # Name of the user in the jumpbox VM
-VM_USER=tanzu
+VM_USER=fmartin
 # Folder to put cli binaries
 BIN_FOLDER=/usr/local/bin/
 # https://kubernetes.io/releases/
@@ -24,7 +24,7 @@ KIND_VERSION=v0.11.1
 # https://github.com/helm/helm/releases
 HELM_VERSION=3.7.2
 # TKG version
-TKG_VERSION=v1.4.0
+TKG_VERSION=v1.4.2
 # Path to save completions
 COMPLETIONS=/etc/bash_completion.d
 # https://github.com/laidbackware/vmd/releases

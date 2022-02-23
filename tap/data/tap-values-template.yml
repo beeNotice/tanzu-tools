@@ -42,8 +42,10 @@ tap_gui:
     catalog:
       locations:
         - type: url
-          # Replace with your own, or just use this one as a blank catalog.
+          # Sample Catalog
           target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
+        - type: url
+          target: https://github.com/beeNotice/tanzu-app/blob/main/catalog-info.yaml
     backend:
         baseUrl: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
         cors:

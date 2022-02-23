@@ -1,7 +1,7 @@
 ###########################################
 # vSphere
 ###########################################
-export GOVC_URL="vcsa-01.haas-478.pez.vmware.com"
+export GOVC_URL="vcsa-01.haas-467.pez.vmware.com"
 export GOVC_USERNAME="administrator@vsphere.local"
 export GOVC_PASSWORD=""
 export GOVC_DATACENTER="Datacenter"
@@ -17,9 +17,8 @@ export GOVC_INSECURE=1
 VM_USER=tanzu
 # Folder to put cli binaries
 BIN_FOLDER=/usr/local/bin/
-# Retrieve link from the vCenter Namespace
-# https://kubernetes.io/releases/
-KUBECTL_LINK=https://10.213.111.4/wcp/plugin/linux-amd64/vsphere-plugin.zip
+# Retrieve link from the vSphere Cluster > Namespaces > Summary > Link to CLI Tools
+KUBECTL_LINK=https://10.213.199.3/wcp/plugin/linux-amd64/vsphere-plugin.zip
 # https://github.com/helm/helm/releases
 HELM_VERSION=3.7.2
 
@@ -45,7 +44,7 @@ ALB_SSH_KEY="$(cat ~/.ssh/id_rsa.pub)"
 # Kubernetes
 ###########################################
 # Workload Management > Supervisor Clusters > Controle Plane Node Address
-CONTROL_PLANE_IP=10.213.111.4
+CONTROL_PLANE_IP=10.213.199.3
 
 # Path to tanzu-tools files
 TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"

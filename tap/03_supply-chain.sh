@@ -19,8 +19,6 @@ kubectl apply -f $TAP_FILES_PATH/data/github-secret.yaml
 kubectl patch serviceaccount default -p '{"secrets": [{"name": "git-ssh"}]}'
 # Configuration pushed @ $(gitops.repository_prefix) + $(workload.name)
 
-
-
 # Install
 # https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install-components.html#inst-ootb-sc-test-scan
 tanzu package install ootb-supply-chain-testing-scanning \
@@ -42,29 +40,40 @@ kubectl apply -f $TAP_FILES_PATH/data/scan-policy.yaml
 k get ScanPolicy
 
 # Create or check Templates
-kubectl get scantemplates 
+kubectl get scantemplates
 
 # Deploy workload
-tanzu apps workload create tanzu-app-web-app \
-  --git-branch main \
-  --git-repo https://github.com/beeNotice/tanzu-app \
-  --label apps.tanzu.vmware.com/has-tests=true \
-  --label app.kubernetes.io/part-of=tanzu-app-web-app \
-  --type web
+#tanzu apps workload create tanzu-app \
+#  --git-branch main \
+#  --git-repo https://github.com/beeNotice/tanzu-app \
+#  --label apps.tanzu.vmware.com/has-tests=true \
+#  --label app.kubernetes.io/part-of=tanzu-app \
+#  --type web
+
+k apply -f $TANZU_APP_FILES_PATH/config/workload.yaml
 
 # Workload logs
-tanzu apps workload tail tanzu-app-web-app --since 1h
+tanzu apps workload tail tanzu-app --since 5m
 
 # Delete workload
-tanzu apps workload delete tanzu-app-web-app
+tanzu apps workload delete tanzu-app-deploy
 
 # Supply chain content
 tanzu apps cluster-supply-chain list
 k get ClusterSupplyChain source-test-scan-to-url -o yaml
+kubectl tree workload tanzu-app
 
 # Follow steps
-tanzu apps workload get tanzu-app-web-app
+tanzu apps workload get tanzu-app-deploy
 kubectl get workload,gitrepository,sourcescan,pipelinerun,images.kpack,imagescan,podintent,app,services.serving
-k get imagescan tanzu-app-web-app
+k get imagescan tanzu-app-deploy
 
-ClusterImageTemplate, ClusterTemplate, ClusterDeploymentTemplate, ClusterSupplyChain, ClusterDelivery, Deliverable, Runnable, Workload
+k get ClusterImageTemplate ClusterTemplate ClusterDeploymentTemplate ClusterSupplyChain ClusterDelivery Deliverable Runnable Workload
+
+
+# Scan result
+kubectl get sourcescan -o yaml
+
+# Promotion
+# https://cartographer.sh/docs/v0.1.0/architecture/
+# https://vmware.slack.com/archives/C0186SB6ATY/p1641500688016700

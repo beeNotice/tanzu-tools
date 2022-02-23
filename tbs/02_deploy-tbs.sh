@@ -47,7 +47,6 @@ k get pods -n build-service
 k create ns build-service-builds
 kp image create tanzu-app \
   --tag harbor.withtanzu.com/fmartin/tanzu-app \
-  --namespace build-service-builds \
   --wait \
   --git https://github.com/beeNotice/tanzu-app.git \
   --git-revision main
