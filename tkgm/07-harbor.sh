@@ -20,4 +20,11 @@ docker rmi foo/bar@<digest>
 docker pull harbor.haas-489.pez.vmware.com/tanzu/busybox@sha256:...
 docker pull harbor.haas-489.pez.vmware.com/tanzu/busybox-signed@sha256:...
 
-# Image with signature cannot be deleted
+NOTE: Image with signature cannot be deleted
+
+# Replication
+# https://tanzu.vmware.com/developer/guides/harbor-as-docker-proxy/
+# https://goharbor.io/docs/2.4.0/administration/configuring-replication/
+
+NOTE: Do not use Dockerhub Proxy
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/rn/vmware-tanzu-kubernetes-grid-15-release-notes/index.html#known-issues-harbor

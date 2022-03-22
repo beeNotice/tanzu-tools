@@ -8,14 +8,16 @@ https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-644
 SSH connexion
 https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-37DC1DF2-119B-4E9E-8CA6-C194F39DDEDA.html
 
+ssh jumpbox
+
+
+
 # Retrieve secret
 kctx shared
-kubectl get virtualmachines
-# Retrieve IP
-kubectl describe virtualmachines
 
-kctx prod
-kubectl get secrets tanzu-cluster-prod-ssh-password -o yaml | yq e '.data.ssh-passwordkey' - | base64 --decode
-kctx tanzu-cluster-prod
-k get nodes -o wide
+# Retrieve IP
+kubectl get virtualmachines -o wide
+
+# Retrieve secret
+kubectl get secrets tanzu-cluster-shared-ssh-password -o yaml | yq e '.data.ssh-passwordkey' - | base64 --decode
 ssh vmware-system-user@TKGS-CLUSTER-NODE-IP-ADDRESS

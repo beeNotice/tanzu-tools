@@ -51,3 +51,4 @@ vSphere with Tanzu : 7.0
 
 vSphere with Tanzu Quick Bytes
 https://www.youtube.com/playlist?list=PLymLY4xJSThplrNcSTTaa9iFU016J7gaI
+

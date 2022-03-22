@@ -12,8 +12,12 @@ tanzu package install cert-manager \
 --version $CERT_MANAGER_VERSION \
 --values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/cert-manager-data-values.yaml
 
+# Checks
+tanzu package installed list -n $USER_PACKAGE_NAMESPACE
+tanzu package installed get cert-manager -n $USER_PACKAGE_NAMESPACE
+
 kubectl get apps -A
-kubectl get pods -n cert-manager
+kubectl get all -n cert-manager
 
 ###########################################
 # Contour (requires Cert Manager)
@@ -35,7 +39,6 @@ kubectl get pods -n tanzu-system-ingress
 # Access Envoy
 ENVOY_POD=$(kubectl -n tanzu-system-ingress get pod -l app=envoy -o name | head -1)
 kubectl -n tanzu-system-ingress port-forward $ENVOY_POD 9001
-
 
 ###########################################
 # Prometheus
@@ -98,7 +101,7 @@ sum(kube_persistentvolume_info)
 # ELK (requires at least 3 nodes)
 k create ns elasticsearch
 helm repo add elastic https://helm.elastic.co
-helm install elasticsearch --namespace elasticsearch --version 7.15.0 elastic/elasticsearch
+helm install elasticsearch --namespace elasticsearch --version 7.16.3 elastic/elasticsearch
 
 # Check
 kubectl run busybox --image=busybox --rm -it --restart=Never -n test -- wget -O- elasticsearch-master.elasticsearch.svc.cluster.local:9200
@@ -109,7 +112,7 @@ helm install kibana \
 --set service.type=LoadBalancer \
 --namespace kibana \
 --set elasticsearchHosts=http://elasticsearch-master.elasticsearch.svc.cluster.local:9200 \
---version 7.15.0 \
+--version 7.16.3 \
 elastic/kibana
 
 # Fluent Bit
@@ -128,7 +131,7 @@ k delete pod busybox-logs -n test
 
 # Check logs
 KIBANA_IP=$(kubectl get services kibana-kibana -n kibana --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-# KIBANA_IP:5601 > Management > Stack Management > Index Patterns > Create > logstash-*
+# http://KIBANA_IP:5601 > Management > Stack Management > Index Patterns > Create > logstash-*
 
 GET /_cat/indices
 GET /logstash-*/_search
@@ -155,7 +158,9 @@ tanzu package installed delete fluent-bit --namespace $USER_PACKAGE_NAMESPACE
 # Create cluster
 tanzu cluster create --file $TANZU_TOOLS_FILES_PATH/tkgm-deploy-file/tanzu-shared-with-avi.yaml
 
-# Declare as shared
+# Declare as shared - TKGM
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-harbor-registry.html
+# Tanzu Kubernetes Grid Service (TKGS) does not support deploying packages to a shared services cluster.
 kubectl config use-context tanzu-mgt-admin@tanzu-mgt
 kubectl label cluster.cluster.x-k8s.io/tanzu-shared cluster-role.tkg.tanzu.vmware.com/tanzu-services="" --overwrite=true
 tanzu cluster list --include-management-cluster
@@ -169,17 +174,17 @@ kubectl config use-context tanzu-shared-admin@tanzu-shared
 tanzu package install harbor \
 --package-name harbor.tanzu.vmware.com \
 --version $HARBOR_VERSION \
---values-file $TANZU_TOOLS_FILES_PATH/scripts/data/harbor-data-values.yaml \
+--values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/harbor-data-values.yaml \
 --namespace $USER_PACKAGE_NAMESPACE
 
 # Known issues
 kubectl -n $USER_PACKAGE_NAMESPACE create secret generic harbor-notary-singer-image-overlay -o yaml --dry-run=client \
---from-file=$TANZU_TOOLS_FILES_PATH/scripts/data/overlay-notary-signer-image-fix.yaml \
+--from-file=$TANZU_TOOLS_FILES_PATH/tkg-common/data/overlay-notary-signer-image-fix.yaml \
 | kubectl apply -f -
 kubectl -n $USER_PACKAGE_NAMESPACE annotate packageinstalls harbor ext.packaging.carvel.dev/ytt-paths-from-secret-name.0=harbor-notary-singer-image-overlay
 
 kubectl -n $USER_PACKAGE_NAMESPACE create secret generic harbor-database-redis-trivy-jobservice-registry-image-overlay -o yaml --dry-run=client \
---from-file=$TANZU_TOOLS_FILES_PATH/scripts/data/fix-fsgroup-overlay.yaml \
+--from-file=$TANZU_TOOLS_FILES_PATH/tkg-common/data/fix-fsgroup-overlay.yaml \
 | kubectl apply -f -
 kubectl -n $USER_PACKAGE_NAMESPACE annotate packageinstalls harbor ext.packaging.carvel.dev/ytt-paths-from-secret-name.1=harbor-database-redis-trivy-jobservice-registry-image-overlay
 
@@ -187,6 +192,8 @@ kubectl delete pods --all -n harbor
 
 # Check
 tanzu package installed list -A
+kubectl get apps -A
+kubectl get pods -n harbor
 # Routing is done through Contour/Envoy
 kubectl get httpproxy -A
 
@@ -213,18 +220,23 @@ mkdir -p ~/.docker/tls/$NOTARY_URL
 sudo cp harbor.crt ~/.docker/tls/$NOTARY_URL/ca.crt
 
 # Deploy image
+# Create tanzu projetc in Harbor
 docker login $HARBOR_URL -u admin
 docker pull busybox:1.34.1
 docker tag busybox:1.34.1 $HARBOR_URL/tanzu/busybox:1.34.1
 docker image list
 docker push $HARBOR_URL/tanzu/busybox:1.34.1
 
-# Add certificate to Worker nodes
+# Add certificate to Worker nodes - TKGm
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-secrets.html#trust-custom-ca-certificates-on-cluster-nodes-3
 # https://vmware.slack.com/archives/CSZCCLW0P/p1625502325185600
 cp $TANZU_TOOLS_FILES_PATH/scripts/data/custom-ca-overlay.yaml ~/.config/tanzu/tkg/providers/ytt/03_customizations/
 cp harbor.crt ~/.config/tanzu/tkg/providers/ytt/03_customizations/tkg-custom-ca.pem
 rm harbor.crt
+
+# Add certificate to Worker nodes - TKGs
+# https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-4E68C7F2-C948-489A-A909-C7A1F3DC545F.html
+# Apply as usual
 
 # Apply to already deployed clusters
 kctx tanzu-mgt-admin@tanzu-mgt

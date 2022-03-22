@@ -3,7 +3,11 @@
 # https://github.com/pvdbleek/tanzu/blob/main/tap-minikube/gitops-workflow.md
 # https://vmware.slack.com/archives/C02D60T1ZDJ/p1639034875225700
 ssh-keygen -t rsa
-ssh-keyscan github.com > ./known_hosts
+ssh-keyscan github.com > $HOME/known_hosts
+
+# Create Dev Namespace for prod
+# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install-components.html#setup
+# @ see 02_deploy-aks.sh / 
 
 # Dry run to fill the file + Add the annotation -> tekton.dev/git-0: github.com
 kubectl create secret generic git-ssh \
@@ -13,10 +17,12 @@ kubectl create secret generic git-ssh \
 --from-file=known_hosts=$HOME/known_hosts \
 --type=kubernetes.io/ssh-auth \
 --dry-run=client \
+-n dev \
 -o yaml > $TAP_FILES_PATH/data/github-secret.yaml
 
 kubectl apply -f $TAP_FILES_PATH/data/github-secret.yaml
-kubectl patch serviceaccount default -p '{"secrets": [{"name": "git-ssh"}]}'
+kubectl annotate secret git-ssh tekton.dev/git-0='github.com' -n dev
+kubectl patch serviceaccount default -p '{"secrets": [{"name": "git-ssh"}]}' -n dev
 # Configuration pushed @ $(gitops.repository_prefix) + $(workload.name)
 
 # Install
@@ -33,11 +39,11 @@ tanzu apps cluster-supply-chain list
 
 # Create Tekton Pipeline
 kubectl apply -f $TAP_FILES_PATH/data/tekton-pipeline.yaml
-k get Pipeline
+k get Pipeline -n dev
 
 # Create scan policy
 kubectl apply -f $TAP_FILES_PATH/data/scan-policy.yaml
-k get ScanPolicy
+k get ScanPolicy -n dev
 
 # Create or check Templates
 kubectl get scantemplates
@@ -50,13 +56,16 @@ kubectl get scantemplates
 #  --label app.kubernetes.io/part-of=tanzu-app \
 #  --type web
 
+# Create secrets for app
+# @ see 03-secret.yml
+
 k apply -f $TANZU_APP_FILES_PATH/config/workload.yaml
 
 # Workload logs
-tanzu apps workload tail tanzu-app --since 5m
+tanzu apps workload tail tanzu-app-deploy -n dev --since 1m
 
 # Delete workload
-tanzu apps workload delete tanzu-app-deploy
+tanzu apps workload delete tanzu-app-deploy -n dev
 
 # Supply chain content
 tanzu apps cluster-supply-chain list
@@ -65,7 +74,7 @@ kubectl tree workload tanzu-app
 
 # Follow steps
 tanzu apps workload get tanzu-app-deploy
-kubectl get workload,gitrepository,sourcescan,pipelinerun,images.kpack,imagescan,podintent,app,services.serving
+kubectl get workload,gitrepository,sourcescan,pipelinerun,images.kpack,imagescan,podintent,app,services.serving -n dev
 k get imagescan tanzu-app-deploy
 
 k get ClusterImageTemplate ClusterTemplate ClusterDeploymentTemplate ClusterSupplyChain ClusterDelivery Deliverable Runnable Workload

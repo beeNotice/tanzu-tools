@@ -6,12 +6,19 @@ TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"
 # Path to k8s deployment files
 K8S_FILES_PATH="$TANZU_TOOLS_FILES_PATH/k8s/"
 # Namespace to deploy tanzu package
-USER_PACKAGE_NAMESPACE="tanzu-user-managed-packages"
+# Kapp-controller is configured to share all packages within the “tanzu-package-repo-global” namespace cluster-wide
+USER_PACKAGE_NAMESPACE="tanzu-package-repo-global"
+
+# Name of the user in the jumpbox VM
+VM_USER=fmartin
+
+# https://kubernetes.io/releases/
+KUBECTL_VERSION=v1.21.7
 
 # Harbor
 # kubectl get httpproxy -A in the shared cluster
-HARBOR_URL=harbor.haas-478.pez.vmware.com
-NOTARY_URL=notary.harbor.haas-478.pez.vmware.com
+HARBOR_URL=harbor.haas-467.pez.vmware.com
+NOTARY_URL=notary.harbor.haas-467.pez.vmware.com
 
 ###########################################
 # Package versions

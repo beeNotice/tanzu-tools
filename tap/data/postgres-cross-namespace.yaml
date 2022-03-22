@@ -1,0 +1,11 @@
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ResourceClaimPolicy
+metadata:
+  name: postgres-cross-namespace
+  namespace: postgresql
+spec:
+  consumingNamespaces:
+  - '*'
+  subject:
+      group: sql.tanzu.vmware.com
+      kind: Postgres

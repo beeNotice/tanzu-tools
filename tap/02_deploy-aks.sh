@@ -1,3 +1,6 @@
+# https://github.com/Tanzu-Solutions-Engineering/se-tap-bootcamps/tree/main/tap-up-and-running-bootcamp
+# https://github.com/kennism/homelab/tree/main/tap
+
 # Azure login
 az login
 
@@ -77,7 +80,7 @@ tanzu secret registry add registry-credentials \
 --password $HARBOR_PASS \
 --namespace default
 
-cat <<EOF | kubectl -n default apply -f -
+cat <<EOF | kubectl -n dev apply -f -
 
 apiVersion: v1
 kind: Secret
@@ -169,6 +172,61 @@ kubectl get service envoy -n tanzu-system-ingress
 # Create DNS entry to this IP or add it to the host C:\Windows\System32\drivers\etc
 http://tap-gui.fmartin.tech/
 
+# Expose API Portal
+k apply -f $TAP_FILES_PATH/data/api-portal-httpproxy.yaml
+k get httpproxy -A
+
+
+# Prepare Service Binding
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-install-operator.html#create-service-accounts
+export HELM_EXPERIMENTAL_OCI=1
+helm registry login registry.pivotal.io \
+       --username=$TANZU_NET_USER \
+       --password=$TANZU_NET_PASSWORD
+
+helm pull oci://registry.pivotal.io/tanzu-sql-postgres/postgres-operator-chart --version v1.5.0 --untar --untardir /tmp
+
+k create ns postgresql
+kubectl create secret docker-registry regsecret \
+    --docker-server=https://registry.pivotal.io/ \
+    --docker-username=$TANZU_NET_USER \
+    --docker-password=$TANZU_NET_PASSWORD \
+    --namespace=postgresql
+
+helm install my-postgres-operator /tmp/postgres-operator/ \
+  --namespace=postgresql \
+  --wait
+
+# Check
+kubectl get all --selector app=postgres-operator -n postgresql
+k get pod -n postgresql
+
+# Deploy Postgresql
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-create-delete-postgres.html
+k apply -f $TAP_FILES_PATH/data/postgresql.yaml
+k get Postgres -n postgresql
+k get pods -n postgresql
+
+# Connect
+kubectl exec -it postgres-tanzu-app-0 -n postgresql -- bash -c "psql"
+\l
+\c postgres-tanzu-app
+select * from choice;
+
+# Service Binding
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-creating-service-bindings.html
+kubectl apply -f $TAP_FILES_PATH/data/resource-claims-postgres.yaml
+kubectl apply -f $TAP_FILES_PATH/data/postgres-cross-namespace.yaml
+
+# Check service Binding
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-creating-service-bindings.html#verify-a-tap-workload-service-binding
+dbname=$(kubectl get secrets postgres-tanzu-app-app-user-db-secret -n postgresql -o jsonpath='{.data.database}' | base64 -d)
+username=$(kubectl get secrets postgres-tanzu-app-app-user-db-secret -n postgresql -o jsonpath='{.data.username}' | base64 -d)
+password=$(kubectl get secrets postgres-tanzu-app-app-user-db-secret -n postgresql -o jsonpath='{.data.password}' | base64 -d)
+
+host=$(kubectl get secrets postgres-tanzu-app-app-user-db-secret -n postgresql -o jsonpath='{.data.host}' | base64 -d)
+port=$(kubectl get secrets postgres-tanzu-app-app-user-db-secret -n postgresql -o jsonpath='{.data.port}' | base64 -d)
+
 # Start / Stop AKS
 az aks start --resource-group rg-tanzu-tap --name aks-tanzu-tap
 az aks stop --resource-group rg-tanzu-tap --name aks-tanzu-tap
@@ -185,3 +243,9 @@ kp clusterstack create old \
 --build-image registry.pivotal.io/tanzu-base-bionic-stack/build@sha256:46fcb761f233e134a92b780ac10236cc1c2e6b19d590b2b3b4d285d3f8fd9ecf \
 --run-image registry.pivotal.io/tanzu-base-bionic-stack/run@sha256:b6b1612ab2dfa294514fff2750e8d724287f81e89d5e91209dbdd562ed7f7daf
 
+# SE Installation
+# https://github.com/Tanzu-Solutions-Engineering/se-tap-bootcamps/tree/main/tap-up-and-running-bootcamp
+
+export CLUSTER_NAME=tap-demo
+az aks create --resource-group ${CLUSTER_NAME} --name ${CLUSTER_NAME} --node-count 2 --enable-addons monitoring --node-vm-size Standard_DS3_v2 --node-osdisk-size 500 --enable-pod-security-policy
+az aks delete --name ${CLUSTER_NAME} --resource-group ${CLUSTER_NAME}

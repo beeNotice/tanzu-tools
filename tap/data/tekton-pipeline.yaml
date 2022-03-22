@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: developer-defined-tekton-pipeline
+  namespace: dev
   labels:
     apps.tanzu.vmware.com/pipeline: test      # (!) required
 spec:
@@ -21,9 +22,9 @@ spec:
           - name: source-revision
         steps:
           - name: test
-            image: gradle
+            image: maven:3-openjdk-11
             script: |-
-              cd `mktemp -d`
-              wget -qO- $(params.source-url) | tar xvz
+              cd $(mktemp -d)
+              wget -qO- $(params.source-url) | tar xvz --touch
               echo 'Run tests !'
-              #./mvnw test
+              # mvn test

@@ -9,6 +9,7 @@ export GOVC_NETWORK="Extra"
 export GOVC_DATASTORE="LUN01"
 export GOVC_RESOURCE_POOL="/$GOVC_DATACENTER/host/Cluster/Resources/AVI"
 export GOVC_INSECURE=1
+export KUBECTL_VSPHERE_PASSWORD=$GOVC_PASSWORD
 
 ###########################################
 # Jumpbox

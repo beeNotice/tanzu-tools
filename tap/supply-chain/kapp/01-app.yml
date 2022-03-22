@@ -1,0 +1,15 @@
+apiVersion: kappctrl.k14s.io/v1alpha1
+kind: App
+metadata:
+  name: simple-app
+spec:
+  serviceAccountName: default
+  fetch:
+  - git:
+      url: https://github.com/beeNotice/tanzu-tools
+      ref: main
+      subPath: tap/supply-chain/kapp-ytt
+  template:
+  - ytt: {}
+  deploy:
+  - kapp: {}

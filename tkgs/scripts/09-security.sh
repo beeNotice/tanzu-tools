@@ -17,6 +17,9 @@ kubectl auth can-i list deployments
 # Check impersonate
 kubectl auth can-i list pods --namespace default --as sso:fmartin@vsphere.local
 
+# API Groups
+# https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#-strong-api-groups-strong-
+
 # Declare roles
 k apply -f $K8S_FILES_PATH/rbac/RolePodReader.yaml
 k apply -f $K8S_FILES_PATH/rbac/RoleBindingDev.yaml
@@ -37,3 +40,16 @@ k get ns
 
 # PSP
 # https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-CD033D1D-BAD2-41C4-A46F-647A560BAEAB.html
+
+# Audit
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-troubleshooting-tkg-audit-logging.html
+
+# Connect to the Control Plane Node following : 99-troubleshooting.adoc
+
+# Audit is enabled by default on TKGs
+# API server audit logging
+# https://vmware.slack.com/archives/CQW2Q05DW/p1618544659013600
+
+sudo tail -500 /var/log/kubernetes/kube-apiserver.log
+sudo cat /etc/kubernetes/extra-config/audit-policy.yaml
+sudo tail -f /var/log/kubernetes/kube-apiserver.log | grep -C3 administrator

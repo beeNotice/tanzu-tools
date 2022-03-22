@@ -12,7 +12,7 @@ spec:
       class: best-effort-medium
       storageClass: tanzu
     workers:
-      count: 3
+      count: 5
       class: best-effort-large
       storageClass: tanzu
   settings:

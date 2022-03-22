@@ -1,0 +1,13 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: api-portal
+  namespace: api-portal
+spec:
+  virtualhost:
+    fqdn: api-portal.fmartin.tech
+  routes:
+    - services:
+        - name: api-portal-server
+          port: 8080
+

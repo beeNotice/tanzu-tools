@@ -1,0 +1,1 @@
+tanzu unmanaged delete tce-local

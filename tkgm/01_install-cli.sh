@@ -12,19 +12,6 @@ ssh-keygen -t rsa -b 4096
 # vSphere SSL certificate
 # https://kb.vmware.com/s/article/2108294
 
-# Kubernetes
-# https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
-curl -LO https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
-sudo mv kubectl $BIN_FOLDER
-sudo chmod +x $BIN_FOLDER/kubectl
-
-# Docker
-# https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
-curl -fsSL https://get.docker.com -o get-docker.sh
-sh get-docker.sh
-rm get-docker.sh 
-sudo adduser ${VM_USER} docker
-
 # Kind
 # https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/$KIND_VERSION/kind-linux-amd64

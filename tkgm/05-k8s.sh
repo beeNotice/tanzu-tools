@@ -27,6 +27,7 @@ kubectl run busybox --image=busybox --rm -it --restart=Never -n test -- /bin/sh
 # Persistent Volumes
 # vSphere Persistent Volumes ReadWriteOnce - 05-pvc.yaml
 k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/01-ReadWriteOnce-pvc.yaml
+k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-pod-pvc.yaml
 kubectl get pvc -n test # Go find it in vCenter > Cluster, Monitor, Cloud Native Storage
 
 # Test
@@ -54,7 +55,7 @@ vi /etc/exports
 # /mnt/nfs_share  10.213.72.0/24(rw,sync,no_subtree_check)
 exportfs -ra
 systemctl start nfs-server.service
-showmount -e  10.213.73.203
+showmount -e 10.213.73.203
 
 # You can add Datastore in VSphere
 # https://docs.vmware.com/en/VMware-vSphere-Container-Storage-Plug-in/2.0/vmware-vsphere-csp-getting-started/GUID-606E179E-4856-484C-8619-773848175396.html
@@ -75,6 +76,11 @@ helm install nfs-subdir-external-provisioner \
 --set nfs.server=$NFS_SERVER_IP \
 --set nfs.path=$NFS_PATH \
 nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
+
+# By default, the provisionner wil create folder in test-nfs-pv-pvc... and will move to archived-test-nfs-pv-pvc
+# You can specify a fix pattern using storageClass.pathPattern
+# Just add it to the Helm deployment
+# https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/charts/nfs-subdir-external-provisioner/README.md
 
 # Check new StorageClass
 k get sc nfs-client -o yaml
@@ -100,6 +106,7 @@ k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-ReadWriteMany-pvc.yaml
 helm delete nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner
 
 # Check Envoy
+k get httpproxy -A
 ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 curl $ENVOY_IP # => Empty
 curl -H "host: tanzu-tools.com" $ENVOY_IP # => Welcome
@@ -121,7 +128,7 @@ k get pods -n test -o wide
 # Network policy
 # https://kubernetes.io/docs/concepts/services-networking/network-policies/
 # https://github.com/ahmetb/kubernetes-network-policy-recipes
-k apply -f $K8S_FILES_PATH/07-network-policy.yaml
+k apply -f $K8S_FILES_PATH/network/02-network-policy.yaml
 k get netpol -n test
 
 # Check Ingress

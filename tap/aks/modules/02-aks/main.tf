@@ -23,7 +23,7 @@ resource "azurerm_kubernetes_cluster" "tanzu" {
 
   default_node_pool {
     name           = "tanzupool"
-    node_count     = 2
+    node_count     = 3
     # az vm list-sizes --location "francecentral" -o table
     vm_size        = "Standard_A4m_v2"
     vnet_subnet_id = var.aks_subnet_id

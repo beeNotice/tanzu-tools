@@ -1,20 +1,5 @@
 #!/bin/bash
 
-# Vagrant
-vagrant up
-vagrant ssh
-sudo adduser tanzu
-sudo usermod -aG sudo tanzu
-
-# Common
-sudo apt-get update
-sudo apt-get -y install curl jq unzip bash-completion dos2unix bash-completion
-sudo snap install yq
-sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' .bashrc
-
-# SSH Key
-ssh-keygen -t rsa -b 4096
-
 # vSphere SSL certificate
 # https://kb.vmware.com/s/article/2108294
 

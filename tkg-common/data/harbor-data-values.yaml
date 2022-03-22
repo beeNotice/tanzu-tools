@@ -1,5 +1,5 @@
 namespace: harbor
-hostname: harbor.haas-489.pez.vmware.com
+hostname: harbor.haas-467.pez.vmware.com
 port:
   https: 443
 logLevel: info
@@ -33,31 +33,31 @@ persistence:
   persistentVolumeClaim:
     registry:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 10Gi
     jobservice:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     database:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     redis:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 1Gi
     trivy:
       existingClaim: ""
-      storageClass: ""
+      storageClass: "tanzu"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 5Gi
@@ -124,7 +124,7 @@ proxy:
   httpProxy:
   httpsProxy:
   noProxy: 127.0.0.1,localhost,.local,.internal
-pspNames: null
+pspNames: "vmware-system-restricted,vmware-system-privileged"
 metrics:
   enabled: false
   core:

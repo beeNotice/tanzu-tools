@@ -1,4 +1,11 @@
 ###########################################
+# Keel
+###########################################
+# https://keel.sh/docs/#deploying-with-kubectl
+kubectl apply -f https://sunstone.dev/keel?namespace=keel&username=admin&password=admin&tag=latest
+kubectl -n keel get pods
+
+###########################################
 # Application
 ###########################################
 
@@ -19,6 +26,8 @@ kp image create tanzu-app \
   --git https://github.com/beeNotice/tanzu-app.git \
   --git-revision main
 
+https://buildpacks.io/
+
 # Kubernetes CRD
 k get images.kpack.io tanzu-app -n build-service-builds -o yaml
 
@@ -31,13 +40,13 @@ kp image status tanzu-app -n build-service-builds
 # Registry
 ###########################################
 # Move to Harbor
+# Do not show Scan yet, come back later
 
 ###########################################
 # Kubernetes
 ###########################################
 # K8s files & organisation
 ytt -f $TANZU_TOOLS_FILES_PATH/k8s-template/01-namespace.yaml -f $TANZU_TOOLS_FILES_PATH/k8s-template/dev.yml
-
 
 # Deploy
 k apply -f $TANZU_TOOLS_FILES_PATH/k8s

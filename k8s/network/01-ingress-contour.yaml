@@ -1,0 +1,12 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: nginx
+  namespace: test
+spec:
+  virtualhost:
+    fqdn: recette.life.interne
+  routes:
+    - services:
+        - name: nginx
+          port: 80

@@ -43,6 +43,6 @@ curl -fsSL https://github.com/tilt-dev/ctlptl/releases/download/v$CTLPTL_VERSION
 # https://docs.tilt.dev/install.html#linux
 curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
 
-
 # Java
 sudo apt install openjdk-17-jdk-headless
+
