@@ -8,7 +8,7 @@ gitops:
   user_name: tanzu-test
   user_email: tanzu-test@cluster.azure
   commit_message: "TAP - New version"
-  ssh_secret: "git-ssh" # name of the secret in github-secret.yaml
+  ssh_secret: git-ssh
 
 cluster_builder: default
 service_account: default

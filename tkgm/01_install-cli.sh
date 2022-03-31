@@ -5,12 +5,26 @@ sudo apt-get update
 sudo apt-get -y install curl jq unzip bash-completion dos2unix bash-completion
 sudo snap install yq
 sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' .bashrc
+source .bashrc
 
 # SSH Key
 ssh-keygen -t rsa -b 4096
 
 # vSphere SSL certificate
 # https://kb.vmware.com/s/article/2108294
+
+# Kubernetes
+# https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+curl -LO https://dl.k8s.io/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl
+sudo mv kubectl $BIN_FOLDER
+sudo chmod +x $BIN_FOLDER/kubectl
+
+# Docker
+# https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+rm get-docker.sh 
+sudo adduser ${VM_USER} docker
 
 # Kind
 # https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
@@ -77,6 +91,10 @@ sudo mv completion/*.bash $COMPLETIONS
 cd
 rm -rf kubectx
 
+# TMC
+sudo cp $TANZU_TOOLS_FILES_PATH/binaries/tmc-v0.4.3-fcb03104 $BIN_FOLDER/tmc
+sudo chmod +x $BIN_FOLDER/tmc
+
 # Create completions & aliases
 # https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
 sudo kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
@@ -86,3 +104,4 @@ echo 'alias k=kubectl' >>~/.bash_aliases
 echo 'complete -F __start_kubectl k' >>~/.bash_aliases
 echo 'alias kctx=kubectx' >>~/.bash_aliases
 echo 'alias kns=kubens' >>~/.bash_aliases
+

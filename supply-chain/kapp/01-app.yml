@@ -4,11 +4,14 @@ metadata:
   namespace: test
   name: sample-app
 spec:
-  serviceAccountName: default
+  cluster:
+    namespace: test
+  serviceAccountName: default-ns-sa
   fetch:
+  # https://github.com/beeNotice/tanzu-tools/tree/main/tap/supply-chain/kapp-ytt
   - git:
       url: https://github.com/beeNotice/tanzu-tools
-      ref: main
+      ref: origin/main
       subPath: tap/supply-chain/kapp-ytt
   template:
   - ytt: {}

@@ -1,8 +1,8 @@
 ###########################################
 # vSphere
 ###########################################
-export GOVC_URL="vcsa-01.haas-467.pez.vmware.com"
-export GOVC_USERNAME="administrator@vsphere.local"
+export GOVC_URL="vcsa.cpod-tanzu.az-fkd.cloud-garage.net"
+export GOVC_USERNAME="administrator@cpod-tanzu.az-fkd.cloud-garage.net"
 export GOVC_PASSWORD=""
 export GOVC_DATACENTER="Datacenter"
 export GOVC_NETWORK="Extra"
@@ -45,9 +45,15 @@ ALB_SSH_KEY="$(cat ~/.ssh/id_rsa.pub)"
 # Kubernetes
 ###########################################
 # Workload Management > Supervisor Clusters > Controle Plane Node Address
-CONTROL_PLANE_IP=10.213.199.3
+CONTROL_PLANE_IP=10.26.1.13
 
 # Path to tanzu-tools files
 TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"
+#TANZU_TOOLS_FILES_PATH="/mnt/c/Dev/workspaces/tanzu-tools"
 # Path to k8s deployment files
 K8S_FILES_PATH="$TANZU_TOOLS_FILES_PATH/k8s/"
+
+###########################################
+# Imports
+###########################################
+source $TANZU_TOOLS_FILES_PATH/tkgs/scripts/00_pass.sh

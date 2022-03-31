@@ -1,6 +1,6 @@
 
 # Login to management
-kubectl vsphere login --server $CONTROL_PLANE_IP --vsphere-username administrator@vsphere.local --insecure-skip-tls-verify
+kubectl vsphere login --server $CONTROL_PLANE_IP --vsphere-username $GOVC_USERNAME --insecure-skip-tls-verify
 kubectl config use-context prod
 
 # Deploy
@@ -19,7 +19,7 @@ kubectl describe tanzukubernetescluster tanzu-cluster-prod
 
 # Login to tanzu-cluster
 kubectl vsphere login --server $CONTROL_PLANE_IP \
---vsphere-username administrator@vsphere.local \
+--vsphere-username $GOVC_USERNAME \
 --insecure-skip-tls-verify \
 --tanzu-kubernetes-cluster-name tanzu-cluster-shared \
 --tanzu-kubernetes-cluster-namespace shared

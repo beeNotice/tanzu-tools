@@ -18,7 +18,7 @@ VM_USER=fmartin
 # Folder to put cli binaries
 BIN_FOLDER=/usr/local/bin/
 # https://kubernetes.io/releases/
-KUBECTL_VERSION=v1.21.7
+KUBECTL_VERSION=v1.21.9
 # https://github.com/kubernetes-sigs/kind/releases
 KIND_VERSION=v0.11.1
 # https://github.com/helm/helm/releases
@@ -69,7 +69,8 @@ DOCKER_EMAIL=""
 # Deployment
 ###########################################
 # Path to tanzu-tools files
-TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"
+#TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"
+TANZU_TOOLS_FILES_PATH="/mnt/c/Dev/workspaces/tanzu-tools"
 # Path to k8s deployment files
 K8S_FILES_PATH="$TANZU_TOOLS_FILES_PATH/k8s/"
 # Namespace to deploy tanzu package

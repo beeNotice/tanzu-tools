@@ -10,8 +10,6 @@ https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-37D
 
 ssh jumpbox
 
-
-
 # Retrieve secret
 kctx shared
 
@@ -21,3 +19,18 @@ kubectl get virtualmachines -o wide
 # Retrieve secret
 kubectl get secrets tanzu-cluster-shared-ssh-password -o yaml | yq e '.data.ssh-passwordkey' - | base64 --decode
 ssh vmware-system-user@TKGS-CLUSTER-NODE-IP-ADDRESS
+
+
+# AVI
+# SSH connection
+ssh admin@172.17.6.4
+
+# Access logs
+# https://dev.to/ngschmidt/troubleshooting-with-vmware-nsx-alb-avi-vantage-23pc
+ll /var/lib/avi/logs/ALL-EVENTS/
+tail -1000 /opt/avi/log/vCenterMgr.log
+
+# Connect to AVI Shell
+shell
+admin / pass
+vinfra makehostaccessible <exihost>

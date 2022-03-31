@@ -26,6 +26,17 @@ kubectl get podintents.conventions.apps.tanzu.vmware.com tanzu-app-deploy -o yam
 
 # tap-values configuration
 # If password has special characters, use single quotes around the pass
-
-
 kubectl get workload,gitrepository,sourcescan,pipelinerun,images.kpack,imagescan,podintent,app,services.serving -n dev
+
+
+# Image is not building
+k describe image.kpack.io -n dev tanzu-java-web-app
+=> Builder default is not ready
+
+kubectl get clusterbuilder.kpack.io default
+=> Ready False
+
+
+# Delivery not working
+You're using an RSA key with SHA-1, which is no longer allowed. Please use a newer client or a different key type.
+=> ssh-keygen -t ed25519 -N "" -C ""

@@ -23,9 +23,8 @@ k get image
 kp image list
 insight image vulnerabilities --digest sha256:89a8ad65def38fce32125003bf2cca242e393c2a14a51b4d5a549a362940b870
 
-
 # Image affected by a CVE
-insight vulnerabilities get --cveid CVE-2021-23463
+insight vulnerabilities get --cveid CVE-2022-0778
 
 
 # Querying results

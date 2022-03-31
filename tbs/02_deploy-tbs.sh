@@ -52,6 +52,15 @@ kp image create tanzu-app \
   --git-revision main
 
 # Kubernetes CRD
+# Use the prefix because there are other Image CRDs
 k get images.kpack.io tanzu-app -n build-service-builds -o yaml
 ----
 
+# Explore Buildpacks stuff
+kp clusterstore list
+kp clusterstore status default
+
+kp clusterstack list
+
+kp clusterbuilder list
+kp clusterbuilder status base

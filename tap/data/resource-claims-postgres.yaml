@@ -9,4 +9,3 @@ rules:
 - apiGroups: ["sql.tanzu.vmware.com"]
   resources: ["postgres"]
   verbs: ["get", "list", "watch", "update"]
-  
