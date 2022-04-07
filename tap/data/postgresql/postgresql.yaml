@@ -1,8 +1,10 @@
+#@ load("@ytt:data", "data")
+---
 apiVersion: sql.tanzu.vmware.com/v1
 kind: Postgres
 metadata:
   name: postgres-tanzu-app
-  namespace: postgresql
+  namespace: #@ data.values.namespace
 spec:
   storageClassName: default
   storageSize: 800M
@@ -30,14 +32,9 @@ spec:
     username: pgadmin
     appUser: pgappuser
   postgresVersion:
-    name: postgres-14 # View available versions with `kubectl get postgresversion`
+    name: postgres-14
   serviceType: ClusterIP
   monitorPodConfig:
-#    tolerations:
-#      - key:
-#        operator:
-#        value:
-#        effect:
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -56,11 +53,6 @@ spec:
               topologyKey: kubernetes.io/hostname
             weight: 100
   dataPodConfig:
-#   tolerations:
-#      - key:
-#        operator:
-#        value:
-#        effect:  
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -78,9 +70,3 @@ spec:
                       - postgres-sample
               topologyKey: kubernetes.io/hostname
             weight: 100
-#  highAvailability:
-#    enabled: true
-#  logLevel: Debug
-#  backupLocation:
-#    name: backuplocation-sample
-#  certificateSecretName:

@@ -25,6 +25,11 @@ echo 'PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> ~/.profile
 # https://github.com/ahmetb/kubectl-tree
 kubectl krew install tree
 
+# Knative
+# https://github.com/knative/client
+sudo cp $TANZU_TOOLS_FILES_PATH/binaries/kn-linux-amd64 $BIN_FOLDER/kn
+sudo chmod +x $BIN_FOLDER/kn
+
 # Insight
 # https://network.tanzu.vmware.com/products/supply-chain-security-tools
 # https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-scst-store-cli_installation.html

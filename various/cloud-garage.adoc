@@ -1,0 +1,32 @@
+
+# Connexion
+
+ssh sixty9@cpodedge-rbx.cloud-garage.net -p 22022 -D 9090
+
+# Add FQDN to host / Has to be done on the cpodrouter
+sudo ssh cpodrouter.cpod-devready.az-fkd.cloud-garage.net
+
+vi /etc/hosts
+10.18.10.6 harbor
+10.18.10.7 concourse
+
+systemctl restart dnsmasq
+
+== Troubleshooting
+
+If you can ping a host on windows but not on the sandbox
+Check that there is no overlaps on the networks
+
+route -n
+
+If Docker is on the same network that the target one, we can fix it by changin it's ip
+sudo vim /etc/docker/daemon.json
+
+{
+  "default-address-pools":
+  [
+    {"base":"172.33.0.0/16", "size":24}
+  ]
+}
+
+sudo systemctl restart docker
