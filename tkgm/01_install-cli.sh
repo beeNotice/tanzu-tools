@@ -105,3 +105,4 @@ echo 'complete -F __start_kubectl k' >>~/.bash_aliases
 echo 'alias kctx=kubectx' >>~/.bash_aliases
 echo 'alias kns=kubens' >>~/.bash_aliases
 
+source ~/.bash_aliases

@@ -1,7 +1,7 @@
 
 # Login to management
 kubectl vsphere login --server $CONTROL_PLANE_IP --vsphere-username $GOVC_USERNAME --insecure-skip-tls-verify
-kubectl config use-context prod
+kubectl config use-context $TKG_NAMESPACE
 
 # Deploy
 # https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-4E68C7F2-C948-489A-A909-C7A1F3DC545F.html
@@ -12,7 +12,7 @@ k apply -f $TANZU_TOOLS_FILES_PATH/tkgs/data/workload-prod-tanzu.yaml
 
 # Check
 kubectl get tanzukubernetesclusters
-kubectl describe tanzukubernetescluster tanzu-cluster-prod
+kubectl describe tanzukubernetescluster $TKG_CLUSTER
 
 # Commandes opérationnelles du cluster Tanzu Kubernetes
 # https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-232CCCF3-CCC1-4D7E-B67C-64590CB891DD.html
@@ -21,11 +21,11 @@ kubectl describe tanzukubernetescluster tanzu-cluster-prod
 kubectl vsphere login --server $CONTROL_PLANE_IP \
 --vsphere-username $GOVC_USERNAME \
 --insecure-skip-tls-verify \
---tanzu-kubernetes-cluster-name tanzu-cluster-shared \
---tanzu-kubernetes-cluster-namespace shared
+--tanzu-kubernetes-cluster-name $TKG_CLUSTER \
+--tanzu-kubernetes-cluster-namespace $TKG_NAMESPACE
 
 kubectl config get-contexts
-kubectl config use-context prod
+kubectl config use-context $TKG_NAMESPACE
 
 # Configure roles
 # https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-CD033D1D-BAD2-41C4-A46F-647A560BAEAB.html
@@ -50,7 +50,7 @@ k apply -f $K8S_FILES_PATH/rbac/role-binding-sa-test.yaml
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-prep-tkgs-kapp.html
 
 # kapp-controller, not required when integrated with TMC
-kctx tanzu-cluster-prod
+kctx $TKG_CLUSTER
 # Check if exists
 kubectl get pods -A | grep kapp-controller
 kubectl apply -f $TANZU_TOOLS_FILES_PATH/tkgs/data/tanzu-system-kapp-ctrl-restricted.yaml
@@ -77,7 +77,7 @@ tanzu login
 ###########################################
 # Shared
 ###########################################
-kubectl config use-context $NAMESPACE_SHARED
+kubectl config use-context $TKG_NAMESPACE
 k apply -f $TANZU_TOOLS_FILES_PATH/tkgs/data/workload-shared-tanzu.yaml
 
 # Check

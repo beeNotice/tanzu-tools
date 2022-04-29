@@ -3,8 +3,15 @@
 # Connect to the target Node through ssh, and download the image
 sudo ctr image pull projects.registry.vmware.com/tkg/prometheus/prometheus_node_exporter@sha256:fb60a1618d016db12291197f6af703737ae793dbba6dc33a532afb1930007709
 
-
 # Probleme installating Harbor, existing roles
 k delete sa harbor-tanzu-package-repo-global-sa -n $USER_PACKAGE_NAMESPACE
 k delete ClusterRole harbor-tanzu-package-repo-global-cluster-role -n $USER_PACKAGE_NAMESPACE
 k delete ClusterRoleBinding harbor-tanzu-package-repo-global-cluster-rolebinding -n $USER_PACKAGE_NAMESPACE
+
+# Update a package
+tanzu package installed update tap \
+     -p tap.tanzu.vmware.com \
+     -v $TAP_VERSION \
+     --values-file $TAP_FILES_PATH/data/tap-values-full.yml \
+     -n tap-install
+

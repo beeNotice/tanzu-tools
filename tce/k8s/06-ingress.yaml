@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tanzu-simple
+  labels: 
+    app : tanzu-simple
+  namespace: tanzu-simple
+spec:
+  rules:
+  - host: tanzu-tce-fmartin.francecentral.cloudapp.azure.com
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tanzu-simple
+            port:
+              number: 80

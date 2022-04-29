@@ -1,0 +1,20 @@
+apiVersion: kpack.io/v1alpha2
+kind: ClusterBuilder
+metadata:
+  name: demo-builder
+spec:
+  serviceAccountRef:
+    name: demo-service-account
+    namespace: build
+  tag: harbor.withtanzu.com/fmartin/builder
+  stack:
+    name: old
+    kind: ClusterStack
+  store:
+    name: default
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/java
+  - group:
+    - id: paketo-buildpacks/nodejs

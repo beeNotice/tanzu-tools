@@ -1,0 +1,30 @@
+apiVersion: run.tanzu.vmware.com/v1alpha1
+kind: TanzuKubernetesCluster
+metadata:
+  name: tanzu-cluster-prod
+  namespace: fmartin
+spec:
+  distribution:
+    version: v1.21
+  topology:
+    controlPlane:
+      count: 1
+      class: best-effort-medium
+      storageClass: tanzu 
+    workers:
+      count: 3
+      class: best-effort-large
+      storageClass: tanzu 
+      volumes: # optional setting required for TBS
+        - name: containerd
+          mountPath: /var/lib/containerd
+          capacity:
+            storage: 50Gi
+  settings:
+    storage:
+      defaultClass: tanzu 
+    network:
+      services:
+        cidrBlocks: ["10.10.0.0/16"]
+      pods:
+        cidrBlocks: ["10.20.0.0/16"]

@@ -1,0 +1,15 @@
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tanzu-simple
+  namespace: build
+spec:
+  tag: harbor.withtanzu.com/fmartin/tanzu-simple
+  serviceAccountName: demo-service-account
+  builder:
+    name: demo-builder
+    kind: ClusterBuilder
+  source:
+    git:
+      url: https://github.com/beeNotice/tanzu-simple
+      revision: main

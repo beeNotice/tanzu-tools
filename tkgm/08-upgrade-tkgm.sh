@@ -33,4 +33,3 @@ sh $TANZU_TOOLS_FILES_PATH/script/tools/curl-loop.sh
 # Perform upgrade
 tanzu cluster available-upgrades get tanzu-wkl-old
 tanzu cluster upgrade tanzu-wkl-old
-

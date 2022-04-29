@@ -3,6 +3,7 @@
 ###########################################
 https://tanzu.vmware.com/application-platform
 https://portal.azure.com/#home
+PPT | Deploying an App Today
 
 ###########################################
 # Start Project
@@ -17,24 +18,9 @@ http://tap-gui.tanzu.fmartin.tech/create?filters%5Bkind%5D=template&filters%5Bus
 # App Deployment
 ###########################################
 tanzu apps workload create -f $TANZU_APP_FILES_PATH/config/workload.yaml
+
 # Follow logs
 tanzu apps workload tail tanzu-app-deploy -n dev --since 1m
-
-# Supply chain details
-# C:\Users\fmartin\OneDrive - VMware, Inc\Meetings\Fabien\VMware Tanzu - TAP - fmartin.pptx
-PPT | Deploying an App Today
-PPT | TAP Supply Chain Patterns
-
-# Supply Chain Configuration
-tanzu apps cluster-supply-chain list
-
-https://github.com/vmware-tanzu/cartographer/blob/main/examples/basic-sc/developer/workload.yaml
-https://github.com/vmware-tanzu/cartographer/blob/main/examples/basic-sc/app-operator/supply-chain.yaml
-https://github.com/vmware-tanzu/cartographer/blob/main/examples/shared/app-operator/git-source-template.yaml
-https://github.com/vmware-tanzu/cartographer/blob/main/examples/shared/app-operator/kpack-image-template.yaml
-
-https://fluxcd.io/docs/components/source/gitrepositories/
-https://github.com/pivotal/kpack/blob/main/docs/image.md#sample-image-resource-with-a-git-source
 
 # Follow Workload
 tanzu apps workload get tanzu-app-deploy -n dev
@@ -47,6 +33,24 @@ http://tap-gui.tanzu.fmartin.tech/app-live-view/
 # Access APIs
 http://tanzu-app-deploy-dev.tanzu.fmartin.tech/v3/api-docs
 http://api-portal.tanzu.fmartin.tech/
+
+###########################################
+# Supply Chain
+###########################################
+# Supply chain details
+# C:\Users\fmartin\OneDrive - VMware, Inc\Meetings\Fabien\VMware Tanzu - TAP - fmartin.pptx
+PPT | TAP Supply Chain Patterns
+
+# Supply Chain Configuration
+tanzu apps cluster-supply-chain list
+
+https://github.com/vmware-tanzu/cartographer/blob/main/examples/basic-sc/developer/workload.yaml
+https://github.com/vmware-tanzu/cartographer/blob/main/examples/basic-sc/app-operator/supply-chain.yaml
+https://github.com/vmware-tanzu/cartographer/blob/main/examples/shared/app-operator/git-source-template.yaml
+https://github.com/vmware-tanzu/cartographer/blob/main/examples/shared/app-operator/kpack-image-template.yaml
+
+https://fluxcd.io/docs/components/source/gitrepositories/
+https://github.com/pivotal/kpack/blob/main/docs/image.md#sample-image-resource-with-a-git-source
 
 ###########################################
 # Pipeline

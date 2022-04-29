@@ -1,14 +1,14 @@
 apiVersion: rbac.authorization.k8s.io/v1
-# This role binding allows "tanzu-dev" group to read pods in the "default" namespace.
+# This role binding allows "fmartin" to read pods in the "default" namespace.
 # You need to already have a Role named "pod-reader" in that namespace.
 kind: RoleBinding
 metadata:
-  name: read-pods-group
+  name: read-pods-user
   namespace: default
 subjects:
 # You can specify more than one "subject"
-- kind: Group
-  name: sso:tanzu-dev@cpod-tanzu.az-fkd.cloud-garage.net # "name" is case sensitive
+- kind: User
+  name: sso:fmartin@cpod-tanzu.az-fkd.cloud-garage.net # "name" is case sensitive
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   # "roleRef" specifies the binding to a Role / ClusterRole

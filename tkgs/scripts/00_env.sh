@@ -45,13 +45,19 @@ ALB_SSH_KEY="$(cat ~/.ssh/id_rsa.pub)"
 # Kubernetes
 ###########################################
 # Workload Management > Supervisor Clusters > Controle Plane Node Address
-CONTROL_PLANE_IP=10.26.1.13
+CONTROL_PLANE_IP=10.16.2.13
 
 # Path to tanzu-tools files
 TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"
 #TANZU_TOOLS_FILES_PATH="/mnt/c/Dev/workspaces/tanzu-tools"
 # Path to k8s deployment files
 K8S_FILES_PATH="$TANZU_TOOLS_FILES_PATH/k8s/"
+
+###########################################
+# Namespaces & Clusters
+###########################################
+TKG_NAMESPACE=fmartin
+TKG_CLUSTER=tanzu-cluster-prod
 
 ###########################################
 # Imports

@@ -9,13 +9,20 @@ Key pairs > Creat Key Pair > fmartin
 # Access Cluster
 # Install CLI
 # Just remove the .msi extension if downloading on windows
-kubectl --kubeconfig=conf/kubeconfig-fmartin-aws-demo.yml get namespaces
+# TMC > Automation Center
+curl -LO https://tmc-cli.s3-us-west-2.amazonaws.com/tmc/0.4.3-7e23d4d8/linux/x64/tmc
+chmod +x tmc && sudo mv tmc /usr/local/bin/
+tmc login
+
+
+# Check connectivity
+kubectl --kubeconfig=kubeconfig-fmartin-tkg-wkl-pez-435.yml get namespaces
 
 # Merge config
 # https://medium.com/@jacobtomlinson/how-to-merge-kubernetes-kubectl-config-files-737b61bd517d
 
 cp ~/.kube/config ~/.kube/config.bak # Merge the two config files together into a new config file 
-KUBECONFIG=~/.kube/config:conf/kubeconfig-fmartin-aws-demo.yml kubectl config view --flatten > /tmp/config # Replace your old config with the new merged config 
+KUBECONFIG=~/.kube/config:kubeconfig-fmartin-tkg-wkl-pez-435.yml kubectl config view --flatten > /tmp/config # Replace your old config with the new merged config 
 mv /tmp/config ~/.kube/config # (optional) Delete the backup once you confirm everything worked ok 
 rm ~/.kube/config.bak
 
@@ -23,3 +30,4 @@ rm ~/.kube/config.bak
 kubectl config unset users.fmartin-aws-demo
 kubectl config unset contexts.fmartin-aws-demo
 kubectl config unset clusters.fmartin-aws-demo
+

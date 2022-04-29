@@ -109,7 +109,7 @@ helm delete nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner
 k get httpproxy -A
 ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 curl $ENVOY_IP # => Empty
-curl -H "host: tanzu-tools.com" $ENVOY_IP # => Welcome
+curl -H "host: www.fmartin.tech" -H "X-Forwarded-For: 77.147.212.44" -H "Test: Lol" $ENVOY_IP # => Welcome
 
 # Chaos testing
 sh $TANZU_TOOLS_FILES_PATH/scripts/tools/curl-loop.sh

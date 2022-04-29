@@ -18,3 +18,4 @@ spec:
   settings:
     storage:
       defaultClass: tanzu
+

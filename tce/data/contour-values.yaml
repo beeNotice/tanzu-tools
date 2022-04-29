@@ -1,0 +1,29 @@
+infrastructureProvider: ""
+namespace: projectcontour
+contour:
+  configFileContents: {}
+  replicas: 2
+  useProxyProtocol: false
+  logLevel: info
+envoy:
+  service:
+    type: "NodePort"
+    loadBalancerIP: ""
+    externalTrafficPolicy: ""
+    annotations: {}
+    nodePorts:
+      http: 0
+      https: 0
+    aws:
+      loadBalancerType: classic
+  hostPorts:
+    enable: true
+    http: 80
+    https: 443
+  hostNetwork: false
+  terminationGracePeriodSeconds: 300
+  logLevel: info
+certificates:
+  useCertManager: false
+  duration: 8760h
+  renewBefore: 360h

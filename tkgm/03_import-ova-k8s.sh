@@ -4,7 +4,7 @@
 
 # vmd get versions -p vmware_tanzu_kubernetes_grid -s tkg
 # vmd get files -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.0
-vmd download -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.0 -f $OVA_FILE --accepteula
+vmd download -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.2 -f $OVA_FILE --accepteula
 cd ~/vmd-downloads/
 
 # Create Ressource Pool

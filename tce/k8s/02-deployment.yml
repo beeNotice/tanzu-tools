@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tanzu-simple
+  namespace: tanzu-simple
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll      
+    keel.sh/pollSchedule: "@every 1m"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tanzu-simple
+  template:
+    metadata:
+      labels:
+        app: tanzu-simple
+    spec:
+      containers:
+        - image: harbor.withtanzu.com/fmartin/tanzu-simple:latest
+          name: tanzu-simple
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: "0.25"
+              memory: 512Mi
+              ephemeral-storage: "128Mi"
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 60
+            periodSeconds: 2
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+            initialDelaySeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tanzu-simple
+  namespace: tanzu-simple
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: tanzu-simple
