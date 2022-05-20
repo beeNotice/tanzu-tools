@@ -1,0 +1,15 @@
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: cnb-nodejs
+  namespace: cnb-nodejs
+spec:
+  tag: harbor.withtanzu.com/fmartin/cnb-nodejs
+  serviceAccountName: demo-service-account
+  builder:
+    name: demo-builder
+    kind: ClusterBuilder
+  source:
+    git:
+      url: https://github.com/beeNotice/cnb-nodejs
+      revision: master

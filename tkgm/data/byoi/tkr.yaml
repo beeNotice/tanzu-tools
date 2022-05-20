@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: tkr-bom-v1.21.8---vmware.1-tkg.2
+ labels:
+   tanzuKubernetesRelease: tkr-bom-v1.21.8---vmware.1-tkg.2
+binaryData:
+ bomContent: BOM-BINARY-CONTENT

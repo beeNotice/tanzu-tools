@@ -14,6 +14,14 @@ systemctl --type service
 systemctl status $SERVICE
 sudo journalctl -fu $SERVICE -n300
 
+systemctl status cloud-final.service
+
+# Cloud init logs
+sudo cat /var/log/cloud-init-output.log
+
+# Check what's running
+sudo crictl ps -a
+
 == Workload Cluster scaling
 
 k logs kapp-controller-6499b8866-nh2sw -n tkg-system
@@ -40,7 +48,6 @@ kubectl patch cluster <name> -p '{"metadata":{"finalizers":null}}' --type=merge
 * Detected on Grafana pod deployment
 * https://kb.vmware.com/s/article/85213
 
-
 == Velero
 
 k logs velero-5f78f75d56-b7lfn -n velero
@@ -53,3 +60,36 @@ mc ls minio
 k get crd | grep velero
 k get backupstoragelocations.velero.io -n velero
 k edit backupstoragelocations.velero.io default -n velero
+
+== Kind
+
+Check that there are no overlap between Kind and the target netork
+docker network inspect kind
+
+# Point to the tmp created file to debug Kind 
+kubectl get pods -A --kubeconfig=/home/ubuntu/.kube-tkg/config -o wide
+kubectl get pods -A --kubeconfig=/home/ubuntu/.kube-tkg/tmp/config_XXXXX -o wide
+
+# Debug
+kubectl get po,deploy,cluster,kubeadmcontrolplane,machine,machinedeployment -A --kubeconfig /root/.kube-tkg/tmp/config_kdTfPqiu
+kubectl logs deployment.apps/<deployment-name> -n <deployment-namespace> manager --kubeconfig /root/.kube-tkg/tmp/config_kdTfPqiu
+
+# Ex for a stuck during a deployment of the Control Plane Mgt
+kubectl logs deployment.apps/capi-kubeadm-control-plane-controller-manager -n capi-kubeadm-control-plane-system manager --kubeconfig /home/ubuntu/.kube-tkg/tmp/config_Lr0AA5Sr
+
+
+== Clean a failed deployment
+
+# Kind
+kind get clusters
+kind delete cluster --name tkg-kind-example1234567abcdef
+
+# Docker
+docker ps
+docker kill container_ID
+
+# vSphere
+Shutdown and delete VM
+
+# Cli
+rm /home/ubuntu/.kube-tkg/tmp/*

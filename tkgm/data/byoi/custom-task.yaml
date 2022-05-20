@@ -1,0 +1,5 @@
+# Add it to the file : tkg/tasks/ubuntu.yaml
+- name: Creating a file with content
+  copy:
+    dest: "/tmp/tanzu-test.txt"
+    content: "Hello Tanzu !"

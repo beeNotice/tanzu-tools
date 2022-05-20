@@ -1,0 +1,4 @@
+sudo useradd -s /bin/bash -d /home/tanzu/ -m -G sudo tanzu
+sudo passwd tanzu
+
+su -l tanzu

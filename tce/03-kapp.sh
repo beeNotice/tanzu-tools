@@ -12,6 +12,7 @@ k apply -f kpack/
 k get Image -n cnb-nodejs
 
 kp build logs cnb-nodejs -n cnb-nodejs
+kp build list cnb-nodejs -n cnb-nodejs
 
 # Image description
 cat image.yaml

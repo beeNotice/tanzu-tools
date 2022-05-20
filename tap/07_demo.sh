@@ -75,7 +75,7 @@ https://docs.vmware.com/en/VMware-Tanzu-Buildpacks/index.html
 
 kp build list -n dev
 kp build logs tanzu-app-deploy -n dev
-kp image status tanzu-app-deploy -n dev
+kp build status tanzu-app-deploy -n dev
 
 ###########################################
 # Security
@@ -137,6 +137,8 @@ https://github.com/vmware-tanzu/cartographer/blob/main/examples/basic-delivery/a
 k apply -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k get deliverable -n prod
 k get pods -n prod
+
+http://tanzu-app-deploy-prod.tanzu.fmartin.tech/
 
 ###########################################
 # Knative - Autoscaling

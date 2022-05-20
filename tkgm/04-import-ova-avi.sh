@@ -7,7 +7,7 @@
 # vmd get products
 # vmd get subproducts -p vmware_nsx_advanced_load_balancer
 # vmd get versions -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc
-# vmd get files -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc -v 20.1.x
+# vmd get files -p vmware_nsx_advanced_load_balancer -s nsx-alb+ndc -v 21.1.x
 
 # AVI files are available on Vault
 # https://vault.vmware.com/group/nsx/avi-networks-technical-resources

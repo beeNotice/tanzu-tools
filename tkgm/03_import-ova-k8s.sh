@@ -3,7 +3,7 @@
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-vsphere.html#import-base
 
 # vmd get versions -p vmware_tanzu_kubernetes_grid -s tkg
-# vmd get files -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.0
+# vmd get files -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.2
 vmd download -p vmware_tanzu_kubernetes_grid -s tkg -v 1.4.2 -f $OVA_FILE --accepteula
 cd ~/vmd-downloads/
 
