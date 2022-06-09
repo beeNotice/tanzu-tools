@@ -1,4 +1,4 @@
-# Add it to the file : tkg/tasks/ubuntu.yaml
+# Add it to the file : tkg/tasks/vsphere.yml
 - name: Creating a file with content
   copy:
     dest: "/tmp/tanzu-test.txt"

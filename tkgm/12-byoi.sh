@@ -1,4 +1,5 @@
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-build-images-index.html
+# https://williamlam.com/2021/06/how-to-create-a-custom-tanzu-kubernetes-grid-tkg-node-ova-based-on-photon-os-real-time-kernel.html
 # For example, in Tanzu Kubernetes Grid v1.4.2, the default Kubernetes version is v1.21.8.
 
 BUILDER_NAME=TKG-Image-Builder-for-Kubernetes-v1.21.8-on-TKG-v1.4.2-master
@@ -7,17 +8,21 @@ wget https://codeload.github.com/vmwarecode/TKG-Image-Builder-for-Kubernetes-v1.
 unzip $BUILDER_ZIP_NAME
 cd $BUILDER_NAME/TKG-Image-Builder-for-Kubernetes-v1.21.8+vmware.1-tkg-v1.4.2
 
-# https://image-builder.sigs.k8s.io/capi/providers/vsphere.html#prerequisites-for-vsphere-builder
-# Create vsphere.json and metadate.json file in /home/ubuntu/
-
 # Create folder to put the generated OVA
 mkdir /home/ubuntu/ova
 
 # Add custom task
-vi tkg/tasks/vmware.yml
-custom-task.yaml
+vi tkg/tasks/vsphere.yml
+data/byoi/custom-task.yaml
 
-# Generate image
+# https://image-builder.sigs.k8s.io/capi/providers/vsphere.html#prerequisites-for-vsphere-builder
+vi /home/ubuntu/vsphere.json
+data/byoi/vsphere.json
+
+vi /home/ubuntu/metadata.json
+data/byoi/metadata.json
+
+# Generate image - Takes about 20 minutes
 docker run -it --rm \
     -v /home/ubuntu/vsphere.json:/home/imagebuilder/vsphere.json \
     -v $(pwd)/tkg.json:/home/imagebuilder/tkg.json \
@@ -30,7 +35,14 @@ docker run -it --rm \
     projects.registry.vmware.com/tkg/image-builder:v0.1.9_vmware.1 \
     build-node-ova-vsphere-ubuntu-2004
 
-Go to the vCenter and convert it to a Template 
+=> Go to the vCenter and convert it to a Template 
+
+# Run without tkr - This is the name of the VM
+# Fill OS data to avoir default values
+VSPHERE_TEMPLATE: ubuntu-2004-kube-v1.21.8
+OS_NAME: "ubuntu"
+OS_VERSION: "20.04"
+OS_ARCH: "amd64"
 
 # Create a TKr for the Linux Image
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-build-images-index.html#optional-create-a-tkr-for-the-linux-image-6
@@ -63,3 +75,22 @@ tanzu kubernetes-release get
 tanzu cluster create --file $HOME/.config/tanzu/tkg/clusterconfigs/dev01-cluster-config.yaml --tkr tkr-bom-v1.21.8---vmware.1-tkg.2
 ssh capv@nodeIp
 ls /tmp
+
+
+# Troubleshooting
+
+# Comptaibility file is here
+cat /home/ubuntu/.config/tanzu/tkg/compatibility/tkg-compatibility.yaml
+
+
+# OVA details
+# https://developer.vmware.com/web/tool/4.4.0/ovf
+
+. .govc.env
+unzip VMware-ovftool-4.4.3-18663434-lin.x86_64.zip
+ovftool/ovftool vi://$GOVC_USERNAME:$GOVC_PASSWORD@$GOVC_URL/vc01/vm/tkg/ubuntu-2004-kube-v1.21.8
+ovftool/ovftool ova/ubuntu-2004-kube-v1.21.8/ubuntu-2004-kube-v1.21.8+vmware.1.ovf
+
+
+
+https://docs.google.com/document/d/1tsyvGsWEbMxKFfx13FwQcTTcUFe345kiLXc6qS6ZJvg/edit

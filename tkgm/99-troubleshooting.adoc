@@ -93,3 +93,9 @@ Shutdown and delete VM
 
 # Cli
 rm /home/ubuntu/.kube-tkg/tmp/*
+
+
+== Deployment
+
+# Add -v 9 to add more details 
+tanzu cluster create xxx -v 9
