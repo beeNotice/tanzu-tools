@@ -9,29 +9,11 @@ ssh-keyscan github.com > $HOME/known_hosts
 # https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install-components.html#setup
 # @ see 02_deploy-aks.sh / 
 
-# GitOps
-# https://docs-staging.vmware.com/en/Tanzu-Application-Platform/1.1/tap/GUID-scc-ootb-supply-chain-basic.html#gitops
-# Dry run to fill the file + Add the annotation -> tekton.dev/git-0: github.com
-kubectl create secret generic git-ssh \
---from-file=ssh-privatekey=$HOME/.ssh/id_ed25519 \
---from-file=identity=$HOME/.ssh/id_ed25519 \
---from-file=identity.pub=$HOME/.ssh/id_ed25519.pub \
---from-file=known_hosts=$HOME/known_hosts \
---type=kubernetes.io/ssh-auth \
---dry-run=client \
--n $TAP_DEV_NAMESPACE \
--o yaml > $TAP_FILES_PATH/data/github-secret.yaml
-
-kubectl apply -f $TAP_FILES_PATH/data/github-secret.yaml
-kubectl annotate secret git-ssh tekton.dev/git-0='github.com' -n $TAP_DEV_NAMESPACE
-kubectl patch serviceaccount default -p '{"secrets": [{"name": "git-ssh"}]}' -n $TAP_DEV_NAMESPACE
-# Configuration pushed @ $(gitops.repository_prefix) + $(workload.name)
-
 # Install
-# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-scc-install-ootb-sc-wtest-scan.html
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.1/tap/GUID-scc-install-ootb-sc-wtest-scan.html
 tanzu package install ootb-supply-chain-testing-scanning \
   --package-name ootb-supply-chain-testing-scanning.tanzu.vmware.com \
-  --version 0.6.1 \
+  --version 0.7.1 \
   --namespace tap-install \
   --values-file $TAP_FILES_PATH/data/ootb-supply-chain-testing-scanning-values.yaml
 

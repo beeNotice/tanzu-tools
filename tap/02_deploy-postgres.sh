@@ -24,13 +24,14 @@ k get pod -n postgresql
 
 # Service Binding
 # https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-creating-service-bindings.html
-kubectl apply -f $TAP_FILES_PATH/data/resource-claims-postgres.yaml
+kubectl apply -f $TAP_FILES_PATH/data/postgresql/resource-claims-postgres.yaml
 
 #kubectl apply -f $TAP_FILES_PATH/data/postgres-cross-namespace.yaml => Don't use anymore, on DB per ns
 
 # Deploy Postgresql - Update ns for dev & prod
 # https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-create-delete-postgres.html
 # This is done using the create-additional-dev-space.sh script
+# ytt -f $TAP_FILES_PATH/data/postgresql/postgresql.yaml -v namespace=dev | kubectl apply -f-
 # Checks
 k get Postgres -n dev
 k get pods -n dev

@@ -19,7 +19,8 @@ VM_USER=tanzu
 # Folder to put cli binaries
 BIN_FOLDER=/usr/local/bin/
 # Retrieve link from the vSphere Cluster > Namespaces > Summary > Link to CLI Tools
-KUBECTL_LINK=https://10.213.199.3/wcp/plugin/linux-amd64/vsphere-plugin.zip
+# https://[SUPERVISOR-CLUSTER-IP]/wcp/plugin/[OS]-amd64/vsphere-plugin.zip
+KUBECTL_LINK=https://10.220.8.82/wcp/plugin/linux-amd64/vsphere-plugin.zip
 # https://github.com/helm/helm/releases
 HELM_VERSION=3.7.2
 

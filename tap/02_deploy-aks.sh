@@ -19,7 +19,7 @@ az provider register --namespace Microsoft.ContainerService
 
 # Deploy
 az group create --location francecentral --name ${RG_NAME}
-az aks create --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --node-count 3 --enable-addons monitoring --node-vm-size Standard_DS3_v2 --node-osdisk-size 500 --enable-pod-security-policy
+az aks create --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --node-count 4 --enable-addons monitoring --node-vm-size Standard_DS3_v2 --node-osdisk-size 500 --enable-pod-security-policy
 az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
 
 # RBAC
@@ -27,12 +27,13 @@ kubectl create clusterrolebinding tap-psp-rolebinding --group=system:authenticat
 
 # Tanzu CLI
 # https://network.tanzu.vmware.com/products/tanzu-application-platform/
-# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install-tanzu-cli.html#cli-and-plugin
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.1/tap/GUID-install-tanzu-cli.html
 mkdir $HOME/tanzu
-tar -xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-framework-linux-1.0.2-amd64.tar -C $HOME/tanzu
+tar -xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-framework-linux-0.11.6-amd64.tar -C $HOME/tanzu
 export TANZU_CLI_NO_INIT=true
 cd $HOME/tanzu
-sudo install cli/core/v0.11.1/tanzu-core-linux_amd64 /usr/local/bin/tanzu
+export VERSION=v0.11.6
+sudo install cli/core/$VERSION/tanzu-core-linux_amd64 /usr/local/bin/tanzu
 tanzu plugin install --local cli all
 
 # Check
@@ -40,16 +41,16 @@ tanzu version
 tanzu plugin list
 
 # Cluste essentials
-# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install-tanzu-cli.html#install-cluster-essentials-for-vmware-tanzu-3
+# https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.1/cluster-essentials/GUID-deploy.html
 mkdir $HOME/tanzu-cluster-essentials
-tar -xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-cluster-essentials-linux-amd64-1.0.0.tgz -C $HOME/tanzu-cluster-essentials
+tar -xvf $TANZU_TOOLS_FILES_PATH/binaries/tanzu-cluster-essentials-linux-amd64-1.1.0.tgz -C $HOME/tanzu-cluster-essentials
 
 export INSTALL_REGISTRY_HOSTNAME=registry.tanzu.vmware.com
 export INSTALL_REGISTRY_USERNAME=$TANZU_NET_USER
 export INSTALL_REGISTRY_PASSWORD=$TANZU_NET_PASSWORD
 
 # Add the Tanzu Application Platform package repository
-export INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:82dfaf70656b54dcba0d4def85ccae1578ff27054e7533d08320244af7fb0343
+export INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d
 cd $HOME/tanzu-cluster-essentials
 ./install.sh
 cd
@@ -62,20 +63,22 @@ sudo cp $HOME/tanzu-cluster-essentials/ytt /usr/local/bin/ytt
 k get ns
 kapp list -A
 
+# DO IT FROM A MACHINE WITH A GOOD NETWORK
 # Relocate image
-# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install.html#relocate-images-to-a-registry-0
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.1/tap/GUID-install.html
 docker login -u fmartin@vmware.com registry.pivotal.io
 docker login -u fmartin@vmware.com registry.tanzu.vmware.com
 docker login -u fma harbor.withtanzu.com
+
+export INSTALL_REGISTRY_HOSTNAME=harbor.withtanzu.com
+export INSTALL_REGISTRY_USERNAME=$HARBOR_USER
+export INSTALL_REGISTRY_PASSWORD=$HARBOR_PASS
+export TAP_VERSION=1.1.2
 
 imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:$TAP_VERSION --to-repo $INSTALL_REGISTRY_HOSTNAME/fmartin/tap-packages
 
 # Install TAP
 kubectl create ns tap-install
-
-export INSTALL_REGISTRY_HOSTNAME=harbor.withtanzu.com
-export INSTALL_REGISTRY_USERNAME=$HARBOR_USER
-export INSTALL_REGISTRY_PASSWORD=$HARBOR_PASS
 
 # Prepare Data
 tanzu secret registry add tap-registry \
@@ -85,6 +88,7 @@ tanzu secret registry add tap-registry \
   --export-to-all-namespaces \
   --yes \
   --namespace tap-install
+
 
 tanzu package repository add tanzu-tap-repository \
   --url $INSTALL_REGISTRY_HOSTNAME/fmartin/tap-packages:$TAP_VERSION \
@@ -106,11 +110,12 @@ tanzu package install tap \
      -n tap-install
 
 # Check
+tanzu package installed get tap -n tap-install
 tanzu package installed list -A
 kubectl describe PackageInstall <package-name> -n tap-install
 
 # Set up developer namespaces to use installed packages
-# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-install-components.html#setup
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.1/tap/GUID-install-components.html#setup
 # https://github.com/tsalm-pivotal/tap-install/blob/master/create-additional-dev-space.sh
 $TAP_FILES_PATH/script/create-additional-dev-space.sh dev
 # Add DB - see 02_deploy-postgres.sh
@@ -119,15 +124,12 @@ $TAP_FILES_PATH/script/create-additional-dev-space.sh dev
 kubectl get service envoy -n tanzu-system-ingress
 # Create DNS entry to this IP or add it to the host C:\Windows\System32\drivers\etc
 # Or create an A entry *.tanzu with the IP
-http://tap-gui.tanzu.fmartin.tech/
 
 # Check DNS
 dig @8.8.8.8 tap-gui.tanzu.fmartin.tech
 
-# Expose API Portal
-# https://docs.vmware.com/en/API-portal-for-VMware-Tanzu/1.0/api-portal/GUID-configuring-k8s.html#configure-external-access
-k apply -f $TAP_FILES_PATH/data/api-portal-httpproxy.yaml
-k get httpproxy -A
+# Access TAP
+http://tap-gui.tanzu.fmartin.tech/
 
 # TAP GUI
 # Create your application accelerator
@@ -137,16 +139,9 @@ k get httpproxy -A
 # https://docs.vmware.com/en/Application-Accelerator-for-VMware-Tanzu/1.0/acc-docs/GUID-creating-accelerators-accelerator-yaml.html
 kubectl apply -f $TAP_FILES_PATH/data/tanzu-app-accelerator/k8s-resource.yaml --namespace accelerator-system
 k get Accelerator -n accelerator-system
-
 tanzu accelerator list
 # If you don't want to wait for 10 minutes after a Git update
 tanzu accelerator update tanzu-app-demo -n accelerator-system --reconcile
-
-# Add application to the Application Platform GUI Software Catalog
-# https://docs.vmware.com/en/Tanzu-Application-Platform/1.0/tap/GUID-getting-started.html#add-your-application-to-tanzu-application-platform-gui-software-catalog-5
-http://tap-gui.fmartin.tech/catalog > Register Entity
-https://github.com/beeNotice/tanzu-app/blob/main/catalog-info.yaml
-
 
 # TBS Configuration
 # https://network.tanzu.vmware.com/products/tbs-dependencies#/releases/959846
@@ -156,10 +151,25 @@ kp clusterstack create old \
 
 kp clusterstack list
 
+###########################################
+# API Portal & Documentation
+###########################################
+# Expose 
+# https://docs.vmware.com/en/API-portal-for-VMware-Tanzu/1.1/api-portal/GUID-configuring-k8s-basics.html#configure-external-access
+k apply -f $TAP_FILES_PATH/data/api-portal-httpproxy.yaml
+k get httpproxy -A
+
 # Modifying OpenAPI Source URL Locations
-# https://docs.vmware.com/en/API-portal-for-VMware-Tanzu/1.0/api-portal/GUID-configuring-k8s.html#modifying-openapi-source-url-locations
-kubectl set env deployment.apps/api-portal-server -n api-portal \
-  API_PORTAL_SOURCE_URLS="https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://tanzu-app-deploy-dev.tanzu.fmartin.tech/v3/api-docs"
+# https://docs.vmware.com/en/API-portal-for-VMware-Tanzu/1.1/api-portal/GUID-configuring-k8s-basics.html
+
+# Add API documentation
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.1/tap/GUID-tap-gui-plugins-api-docs.html
+
+###########################################
+# Next steps
+###########################################
+# Continue to 03_supply-chain-install.sh
+# Continue to 02_deploy-postgres.sh
 
 ###########################################
 # Day 2

@@ -14,6 +14,12 @@ az vm create \
     --public-ip-sku Standard \
     --public-ip-address-dns-name tce-demo-fmartin
 
+# Configuration
+az vm auto-shutdown \
+    -g rg-tanzu \
+    -n tce-demo \
+    --time 0030
+
 # Open port
 az vm open-port \
   --nsg-name open-http \
@@ -27,6 +33,7 @@ ssh tanzu@tce-demo-fmartin.francecentral.cloudapp.azure.com
 
 ###########################################
 # Install
+# Install & Upgrade > Install the Tanzu CLI
 # https://tanzucommunityedition.io/docs/v0.12/cli-installation/
 ###########################################
 
@@ -36,7 +43,7 @@ if ! [ -f /usr/local/bin/kubectl ]; then
   curl -LO https://storage.googleapis.com/kubernetes-release/release/$K8S_VERSION/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl && \
     sudo install ./kubectl /usr/local/bin/kubectl && \
-    rm ./kubectl
+    rm ./kubectl && \
     echo 'alias k=kubectl' >> ~/.bashrc
 fi
 
@@ -65,6 +72,7 @@ cd -
 
 ###########################################
 # Deploy - Unmanaged Clusters
+# Getting Started > Deploy Unmanaged Clusters
 # https://tanzucommunityedition.io/docs/v0.12/getting-started-unmanaged/
 ###########################################
 tanzu unmanaged-cluster create tce-local -p 80:80 -p 443:443
@@ -96,6 +104,7 @@ tanzu package installed list
 kubectl --namespace projectcontour get service envoy
 
 # Application
+wget "https://raw.githubusercontent.com/beeNotice/tanzu-tools/main/tce/vmug/app.yaml"
 k apply -f app.yaml
 k get pods -n tanzu-simple
 

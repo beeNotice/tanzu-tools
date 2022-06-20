@@ -26,7 +26,6 @@ kubectl create secret generic git-ssh \
 --from-file=identity.pub=$HOME/.ssh/id_ed25519.pub \
 --from-file=known_hosts=$HOME/known_hosts \
 --type=kubernetes.io/ssh-auth \
---dry-run=client \
 -n $TAP_NAMESPACE
 kubectl annotate secret git-ssh tekton.dev/git-0='github.com' -n $TAP_NAMESPACE
 kubectl patch serviceaccount default -p '{"secrets": [{"name": "git-ssh"}]}' -n $TAP_NAMESPACE
@@ -54,61 +53,25 @@ imagePullSecrets:
   - name: tap-registry
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: RoleBinding
 metadata:
-  name: default
-rules:
-- apiGroups: [source.toolkit.fluxcd.io]
-  resources: [gitrepositories]
-  verbs: ['*']
-- apiGroups: [source.apps.tanzu.vmware.com]
-  resources: [imagerepositories]
-  verbs: ['*']
-- apiGroups: [carto.run]
-  resources: [deliverables, runnables]
-  verbs: ['*']
-- apiGroups: [kpack.io]
-  resources: [images]
-  verbs: ['*']
-- apiGroups: [conventions.apps.tanzu.vmware.com]
-  resources: [podintents]
-  verbs: ['*']
-- apiGroups: [""]
-  resources: ['configmaps']
-  verbs: ['*']
-- apiGroups: [""]
-  resources: ['pods']
-  verbs: ['list']
-- apiGroups: [tekton.dev]
-  resources: [taskruns, pipelineruns]
-  verbs: ['*']
-- apiGroups: [tekton.dev]
-  resources: [pipelines]
-  verbs: ['list']
-- apiGroups: [kappctrl.k14s.io]
-  resources: [apps]
-  verbs: ['*']
-- apiGroups: [serving.knative.dev]
-  resources: ['services']
-  verbs: ['*']
-- apiGroups: [servicebinding.io]
-  resources: ['servicebindings']
-  verbs: ['*']
-- apiGroups: [services.apps.tanzu.vmware.com]
-  resources: ['resourceclaims']
-  verbs: ['*']
-- apiGroups: [scanning.apps.tanzu.vmware.com]
-  resources: ['imagescans', 'sourcescans']
-  verbs: ['*']
+  name: default-permit-deliverable
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: deliverable
+subjects:
+  - kind: ServiceAccount
+    name: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: default
+  name: default-permit-workload
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: default
+  kind: ClusterRole
+  name: workload
 subjects:
   - kind: ServiceAccount
     name: default

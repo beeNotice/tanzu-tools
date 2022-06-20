@@ -2,12 +2,12 @@
 # Azure
 ###########################################
 RG_NAME=rg-tanzu-demo
-CLUSTER_NAME=aks-tanzu-demo
+CLUSTER_NAME=aks-tanzu-fmartin
 
 ###########################################
 # TAP
 ###########################################
-TAP_VERSION=1.0.2
+TAP_VERSION=1.1.2
 
 # Folder to put cli binaries
 BIN_FOLDER=/usr/local/bin/

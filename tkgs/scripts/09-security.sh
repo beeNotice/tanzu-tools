@@ -1,15 +1,37 @@
 # https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-93B29112-4492-431F-958A-12323540C38D.html
 # https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-6DE4016E-D51C-4E9B-9F8B-F6577A18F296.html
 # https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-CD033D1D-BAD2-41C4-A46F-647A560BAEAB.html
+# https://williamlam.com/2021/07/closer-look-at-vsphere-permissions-for-vsphere-with-tanzu.html
 
 # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole
-
 Administration > SSO > Users and Groups
 Domain :  vsphere.local > Add
 fmartin > Fmartin2022!
 
 # Create Group
 Groups > Add > tanzu-dev + Add fmartin as Member
+
+###########################################
+# DevOps Engineers - 
+###########################################
+1/ K8s connexion
+
+Create the namespace as Administrator
+Add fmartin in the Permissions as Owner
+
+Give him the URL of the Kubernetes control plane
+This user can now login and perform operation to the assigned Namespace
+
+1/ vCenter connexion
+You can Allow them to connect to vCenter
+
+Administration > SSO > Users and Groups > ServiceProviderUsers
+Administration > Access Control > Global Permissions > Add > fmartin | Read Only
+WARN: Do not forget to check "Propagate to children"
+
+###########################################
+# Custom RoleBindings
+###########################################
 
 # https://kubernetes.io/docs/reference/access-authn-authz/authorization/
 # Check to see if I can do everything in my current namespace ("*" means all)
