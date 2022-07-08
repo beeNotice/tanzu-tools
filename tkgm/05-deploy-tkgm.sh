@@ -18,8 +18,7 @@ tanzu management-cluster get
 tanzu management-cluster kubeconfig get --admin
 kubectl config use-context tanzu-mgt-admin@tanzu-mgt
 
-kubectl get nodes -o wide
-ssh capv@$node-ip
+kubectl get apps -A
 k get pods -A
 
 # Create workload

@@ -18,7 +18,6 @@ kubectl get virtualmachines -o wide
 kubectl get secrets tanzu-cluster-shared-ssh-password -o yaml | yq e '.data.ssh-passwordkey' - | base64 --decode
 ssh vmware-system-user@TKGS-CLUSTER-NODE-IP-ADDRESS
 
-
 # AVI
 # SSH connection
 ssh admin@172.17.6.4

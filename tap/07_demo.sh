@@ -177,4 +177,4 @@ k logs tanzu-app-deploy-00003-deployment-7ccb67dd5d-24hbt -n prod workload
 # Clean
 ###########################################
 k delete -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
-tanzu apps workload delete -f $TANZU_APP_FILES_PATH/config/workload.yaml
+k delete -f $TANZU_APP_FILES_PATH/config/workload.yaml

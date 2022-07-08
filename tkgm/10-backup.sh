@@ -8,7 +8,6 @@ k apply -f $TANZU_TOOLS_FILES_PATH/k8s/02-secret.yaml
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install minio bitnami/minio \
-  --version 9.2.5 \
   --namespace minio \
   --set auth.rootUser=admin \
   --set auth.rootPassword=T6PoL7CnyU1nBOZxG4a4c6Je4mOXY5PIeLREVmkJ \

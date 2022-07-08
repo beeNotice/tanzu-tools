@@ -1,7 +1,10 @@
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-cli-reference-packages.html
+tanzu package repository list -A
+
 ###########################################
 # Cert Manager
 ###########################################
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-packages-cert-manager.html
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-packages-cert-manager.html
 kubectl create ns $USER_PACKAGE_NAMESPACE
 tanzu package available list cert-manager.tanzu.vmware.com -A
 
@@ -28,8 +31,8 @@ tanzu package available list contour.tanzu.vmware.com -A
 tanzu package install contour \
 --package-name contour.tanzu.vmware.com \
 --version $CONTOUR_VERSION \
---values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/contour-data-values.yaml \
---namespace $USER_PACKAGE_NAMESPACE
+--namespace $USER_PACKAGE_NAMESPACE \
+--values-file $TANZU_TOOLS_FILES_PATH/tkg-common/data/contour-data-values.yaml
 
 # Check k8s
 tanzu package installed list -A

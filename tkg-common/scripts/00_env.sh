@@ -23,9 +23,9 @@ NOTARY_URL=notary.harbor.haas-467.pez.vmware.com
 ###########################################
 # Package versions
 ###########################################
-GRAFANA_VERSION="7.5.7+vmware.1-tkg.1"
-PROMETHEUS_VERSION="2.27.0+vmware.1-tkg.1"
-CONTOUR_VERSION="1.17.1+vmware.1-tkg.1"
-CERT_MANAGER_VERSION="1.1.0+vmware.1-tkg.2"
+GRAFANA_VERSION="7.5.7+vmware.2-tkg.1"
+PROMETHEUS_VERSION="2.27.0+vmware.2-tkg.1"
+CONTOUR_VERSION="1.18.2+vmware.1-tkg.1"
+CERT_MANAGER_VERSION="1.5.3+vmware.2-tkg.1"
 FLUENT_BIT_VERSION="1.7.5+vmware.1-tkg.1"
 HARBOR_VERSION="2.2.3+vmware.1-tkg.1"

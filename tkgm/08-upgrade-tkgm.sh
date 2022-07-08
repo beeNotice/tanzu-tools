@@ -1,35 +1,36 @@
-# Horizontal scale
-tanzu cluster scale tanzu-wkl --worker-machine-count 3
-tanzu cluster list --include-management-cluster
-tanzu cluster get tanzu-wkl
 
-# Vertical scale
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-scale-cluster.html#vertical-kubectl
-kubectl get VsphereMachineTemplate tanzu-wkl-worker -o yaml > tanzu-wkl-worker-machine-template.yaml
-# => Update name to tanzu-wkl-worker-updated & size
-k apply -f tanzu-wkl-worker-machine-template.yaml
-k edit MachineDeployment tanzu-wkl-md-0
-# => Update spec.template.spec.infrastructureRef.name field to tanzu-wkl-worker-updated
+
+
+# Install previous version
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-k8s-clusters-k8s-versions.html
+# Import Previous OVA version (see tkg-terraforming-vsphere setup-jumpbox.sh)
+tanzu kubernetes-release get
+tanzu cluster create --file $HOME/.config/tanzu/tkg/clusterconfigs/dev01-cluster-config.yaml --tkr v1.21.11---vmware.1-tkg.3
+tanzu cluster kubeconfig get dev01 --admin
+kubectl config use-context dev01-admin@dev01
+
+# List current version
+k get nodes
+tanzu cluster list --include-management-cluster
 
 # Upgrade version
-# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-upgrade-tkg-workload-clusters.html
-# Import photon-3-kube-v1.20.8+vmware.1-tkg.2-9893064678268559535 OVA
-tanzu cluster list --include-management-cluster
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-upgrade-tkg-workload-clusters.html
+
+# List available releases
 tanzu kubernetes-release get
-tanzu cluster create --file tanzu-wkl.yaml --tkr v1.20.8---vmware.1-tkg.2
+tanzu kubernetes-release available-upgrades get v1.21.11---vmware.1-tkg.3
+tanzu cluster available-upgrades get dev01
 
-tanzu cluster list
-tanzu cluster kubeconfig get tanzu-wkl-old --admin
-kubectl config use-context tanzu-wkl-old-admin@tanzu-wkl-old
-
-k apply -f $K8S_FILES_PATH/01-namespace.yaml
-k apply -f $K8S_FILES_PATH/02-secret.yaml
-k apply -f $K8S_FILES_PATH/03-deployment.yaml
-k apply -f $K8S_FILES_PATH/04-service.yaml
+# Prepare scripts to check continuity
+k apply -f $K8S_FILES_PATH/sample/01-namespace.yaml
+k apply -f $K8S_FILES_PATH/sample/02-secret.yaml
+kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "docker-hub-creds"}]}' --namespace=test
+k apply -f $K8S_FILES_PATH/sample/03-deployment.yaml
+k apply -f $K8S_FILES_PATH/sample/04-service.yaml
+k get pods -n test
 
 # Continuous curl while upgrade
-sh $TANZU_TOOLS_FILES_PATH/script/tools/curl-loop.sh
+sh $TANZU_TOOLS_FILES_PATH/tools/curl-loop.sh
 
 # Perform upgrade
-tanzu cluster available-upgrades get tanzu-wkl-old
-tanzu cluster upgrade tanzu-wkl-old
+tanzu cluster upgrade dev01

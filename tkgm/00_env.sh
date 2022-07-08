@@ -62,7 +62,7 @@ ALB_SSH_KEY="$(cat ~/.ssh/id_rsa.pub)"
 ###########################################
 DOCKER_REGISTRY_SERVER="https://index.docker.io/v1/"
 DOCKER_USER="beenotice"
-DOCKER_PASSWORD=""
+DOCKER_PASS=""
 DOCKER_EMAIL=""
 
 ###########################################

@@ -5,29 +5,35 @@
 kubectl create secret docker-registry docker-hub-creds \
 --docker-server=$DOCKER_REGISTRY_SERVER \
 --docker-username=$DOCKER_USER \
---docker-password=$DOCKER_PASSWORD \
+--docker-password=$DOCKER_PASS \
 --docker-email=$DOCKER_EMAIL \
 -n test \
 --dry-run=client \
--o yaml > $K8S_FILES_PATH/02-secret.yaml
+-o yaml > $K8S_FILES_PATH/sample/02-secret.yaml
 
 # Update default SA to use this credential
-k apply -f $K8S_FILES_PATH/02-secret.yaml
+k apply -f $K8S_FILES_PATH/sample/02-secret.yaml
 kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "docker-hub-creds"}]}' --namespace=test
 
 # Deploy k8s objects
-k apply -f $K8S_FILES_PATH/01-namespace.yaml
-k apply -f $K8S_FILES_PATH/03-deployment.yaml
-k apply -f $K8S_FILES_PATH/04-service.yaml
+k apply -f $K8S_FILES_PATH/sample/01-namespace.yaml
+k apply -f $K8S_FILES_PATH/sample/03-deployment.yaml
+k apply -f $K8S_FILES_PATH/sample/04-service.yaml
 k get svc -n test
 kubectl exec -it nginx-f6ccb5668-22k9t -n test -- /bin/bash
 kubectl exec nginx-f6ccb5668-22k9t -n test -- curl 100.69.237.145
 kubectl run busybox --image=busybox --rm -it --restart=Never -n test -- /bin/sh
 
+# Check Envoy
+k apply -f $K8S_FILES_PATH/network/01-ingress.yaml
+k get Ingress -A
+ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+curl $ENVOY_IP # => Empty
+curl -H "host: tanzu-tools.com" $ENVOY_IP # => Welcome
+
 # Persistent Volumes
 # vSphere Persistent Volumes ReadWriteOnce - 05-pvc.yaml
 k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/01-ReadWriteOnce-pvc.yaml
-k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-pod-pvc.yaml
 kubectl get pvc -n test # Go find it in vCenter > Cluster, Monitor, Cloud Native Storage
 
 # Test
@@ -35,6 +41,11 @@ k apply -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-pod-pvc.yaml
 kubectl exec nginx -n test -- bash -c "echo 'Hello from pod A' >> /data/hello_world"
 kubectl exec nginx -n test -- bash -c "echo 'Hello from pod A again' >> /data/hello_world"
 kubectl exec nginx -n test -- bash -c "cat /data/hello_world"
+
+# Clean
+k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-pod-pvc.yaml
+k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/01-ReadWriteOnce-pvc.yaml
+# Check removed on vSphere
 
 # https://docs-staging.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-tanzu-k8s-clusters-storage.html
 # https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-82AC812A-40E3-4563-9329-747634E1AB6E.html
@@ -104,12 +115,6 @@ ls /mnt/nfs_share/
 k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/03-deployment-pvc.yaml
 k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-ReadWriteMany-pvc.yaml
 helm delete nfs-subdir-external-provisioner -n nfs-subdir-external-provisioner
-
-# Check Envoy
-k get httpproxy -A
-ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-curl $ENVOY_IP # => Empty
-curl -H "host: www.fmartin.tech" -H "X-Forwarded-For: 77.147.212.44" -H "Test: Lol" $ENVOY_IP # => Welcome
 
 # Chaos testing
 sh $TANZU_TOOLS_FILES_PATH/scripts/tools/curl-loop.sh

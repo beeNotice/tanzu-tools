@@ -18,6 +18,10 @@ spec:
       containers:
       - image: nginx
         name: nginx
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

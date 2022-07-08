@@ -1,3 +1,6 @@
+###########################################
+# Security Policy
+###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Mission-Control/services/tanzumc-using/GUID-8E9E8345-5213-4049-9C14-4D4CDD983B27.html
 
 # Disable policy enforcement to test
@@ -19,12 +22,15 @@ kubectl get opapolicies
 kubectl get constraint
 
 # Check Policy
-k apply -f runAsRoot.yaml
+k apply -f $TANZU_TOOLS_FILES_PATH/tmc/k8s/runAsRoot.yaml
 kubectl exec nginx-77959bf944-wpmtc -it -- /bin/sh
 whoami
 
 # The reason is present in the describe of the replicaset
 
+###########################################
+# Custom Template
+###########################################
 # TMC template and implementation details
 kubectl get constrainttemplate
 kubectl get policydefinition
@@ -40,8 +46,14 @@ Assign it with
  - Disable policy enforcement
 
 
+###########################################
 # Network
-k apply -f namespacesNetwork.yaml
+###########################################
+# Create Namespaces
+tmc cluster namespace create -n blue -c $CLUSTER_NAME -k $WORKSPACE_NAME -l color=blue
+tmc cluster namespace create -n green -c $CLUSTER_NAME -k $WORKSPACE_NAME -l color=green
+
+k apply -f $TANZU_TOOLS_FILES_PATH/tmc/k8s/namespacesNetwork.yaml
 k get pods -n blue
 k get pods -n green
 
@@ -51,22 +63,16 @@ curl nginx.blue.svc.cluster.local
 curl nginx.green.svc.cluster.local
 
 # Disable Connectivity to Green
-Create Workspace with the namespaces
-Add labels to the namespaces color | green & color | blue
-Create a Network Policy on the Workspace
-
+# Create a Network Policy on the Workspace
+Policies > Assignments > Network
 Type : deny-all
 Name : fmartin-deny-green
 Include only specific namespaces : color | green > Add Label Selector
 
 => Curl are now disabled
 
+# Delete
+k delete -f $TANZU_TOOLS_FILES_PATH/tmc/k8s/namespacesNetwork.yaml
+tmc cluster namespace delete blue --cluster-name $CLUSTER_NAME
+tmc cluster namespace delete green --cluster-name $CLUSTER_NAME
 
-
-
-
-
-# Authentication
-# https://docs.vmware.com/en/VMware-Tanzu-Mission-Control/services/tanzumc-concepts/GUID-EB9C6D83-1132-444F-8218-F264E43F25BD.html
-# https://docs.vmware.com/en/VMware-Tanzu-Mission-Control/services/tanzumc-concepts/GUID-9A4D2BA3-C84B-4DB8-927F-6BF5408515E0.html#GUID-9A4D2BA3-C84B-4DB8-927F-6BF5408515E0
-# https://docs.vmware.com/en/VMware-Tanzu-Mission-Control/services/tanzumc-using/GUID-CA5A31BC-4D7B-4EDD-A4C8-95BEEC08F7C4.html
