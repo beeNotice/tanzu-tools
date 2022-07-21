@@ -3,10 +3,10 @@
 # vSphere SSL certificate
 # https://kb.vmware.com/s/article/2108294
 
-
 # Kubernetes
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 # Retrieve link from the vCenter Namespace
+KUBECTL_LINK=https://10.220.47.162/wcp/plugin/linux-amd64/vsphere-plugin.zip
 curl -LO $KUBECTL_LINK --insecure
 unzip vsphere-plugin.zip -d vsphere-plugin
 chmod +x vsphere-plugin/bin/*
@@ -45,3 +45,4 @@ echo 'alias k=kubectl' >>~/.bash_aliases
 echo 'complete -F __start_kubectl k' >>~/.bash_aliases
 echo 'alias kctx=kubectx' >>~/.bash_aliases
 echo 'alias kns=kubens' >>~/.bash_aliases
+

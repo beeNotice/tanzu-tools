@@ -1,40 +1,39 @@
 profile: full
+# Installation fails if this is not set to true
+ceip_policy_disclosed: true
 excluded_packages:
   - learningcenter.tanzu.vmware.com
   - workshops.learningcenter.tanzu.vmware.com
-  - ootb-supply-chain-testing.tanzu.vmware.com
 
 buildservice:
-  kp_default_repository: 'harbor.withtanzu.com/fmartin/build-service/'
+  kp_default_repository: ''
   kp_default_repository_username: ""
   kp_default_repository_password: ""
   tanzunet_username: ""
   tanzunet_password: ""
-  descriptor_name: "tap-1.0.0-lite"
+  descriptor_name: "full"
   enable_automatic_dependency_updates: false
 
 supply_chain: basic
 
 ootb_supply_chain_basic:
-  service_account: default
-  cluster_builder: default
   registry:
-    server: 'harbor.withtanzu.com'
-    repository: 'fmartin/tanzu-app-tap'
+    server: ''
+    repository: ''
   gitops:
     # Leave empty for public repos, add a secret for private repos.
     ssh_secret: ""
 
 learningcenter:
-  ingressDomain: "learningcenter.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io" # Replace IP with your minikube IP
+  ingressDomain: "learningcenter.tanzu.fmartin.tech"
 
 tap_gui:
   service_type: ClusterIP
   ingressEnabled: "true"
-  ingressDomain: "aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io" # Replace IP with your minikube IP
+  ingressDomain: "tanzu.fmartin.tech"
   app_config:
     app:
-        baseUrl: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
+        baseUrl: http://tap-gui.tanzu.fmartin.tech
     integrations:
       github: 
         - host: github.com
@@ -42,32 +41,31 @@ tap_gui:
     catalog:
       locations:
         - type: url
-          # Sample Catalog
+          # Catalog repository
           target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
-        - type: url
-          target: https://github.com/beeNotice/tanzu-app/blob/main/catalog-info.yaml
     backend:
-        baseUrl: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
+        baseUrl: http://tap-gui.tanzu.fmartin.tech
         cors:
-            origin: http://tap-gui.aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io # Replace IP with your minikube IP
+            origin: http://tap-gui.tanzu.fmartin.tech
 
 grype:
-  namespace: "default" # (optional) Defaults to default namespace.
+  namespace: "dev"
   targetImagePullSecret: "registry-credentials"
 
 contour:
   envoy:
     service:
-      type: NodePort
-      nodePorts:
-        http: 30080
-        https: 30443
+      type: LoadBalancer
 
 cnrs:
   provider: local
-  domain_name: "aks-tanzu-8debdf02.hcp.francecentral.azmk8s.io" # Replace IP with your minikube IP
-
-ceip_policy_disclosed: true
+  domain_name: "tanzu.fmartin.tech"
+  # Fix domain template for TSL certficates
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 metadata_store:
-  app_service_type: 'NodePort'
+  app_service_type: 'LoadBalancer'
+
+api_portal:
+  apiPortalServer:
+    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://tanzu-app-deploy-dev.tanzu.fmartin.tech/v3/api-docs"

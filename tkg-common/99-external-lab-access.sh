@@ -2,7 +2,6 @@
 Deploy an OVA from https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.ova
 Configure default pass and ssh key
 
-
 # Configure
 ssh ubuntu@IP
 

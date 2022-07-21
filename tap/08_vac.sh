@@ -5,6 +5,8 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install -n kubeapps  \
 --create-namespace kubeapps \
 --set frontend.service.type=LoadBalancer \
+--set dashboard.resources.limits.memory=256Mi \
+--set dashboard.resources.limits.cpu=500m \
 bitnami/kubeapps
 
 # Create Token
