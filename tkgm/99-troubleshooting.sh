@@ -138,7 +138,6 @@ A connection refused suggests the VM itself doesn t have the APIServer running (
 ###########################################
 # Deleting a Cluster Stuck
 ###########################################
-
 Remove the finalizers from kubectl edit cluster dev01
 
 ###########################################

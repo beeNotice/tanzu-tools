@@ -63,6 +63,12 @@ https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.1/vmware-tanzu-kuberne
 # 10.173.91.3 is the AVI IP to access the management cluster
 curl -s -k https://10.173.91.3:6443/version -vvv
 
+
+# Check wht's running
+sudo crictl ps -a
+sudo crictl pods
+sudo crictl logs 87d3992f84f74
+
 == Overlays
 
 tanzu cluster create CLUSTER_NAME --file CLUSTER_CONFIG --dry-run

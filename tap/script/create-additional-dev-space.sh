@@ -76,12 +76,3 @@ subjects:
   - kind: ServiceAccount
     name: default
 EOF
-
-# Create DB
-kubectl create secret docker-registry regsecret \
-    --docker-server=https://registry.pivotal.io/ \
-    --docker-username=$TANZU_NET_USER \
-    --docker-password=$TANZU_NET_PASSWORD \
-    --namespace=$TAP_NAMESPACE
-
-ytt -f $TAP_FILES_PATH/data/postgresql/postgresql.yaml -v namespace=$TAP_NAMESPACE | kubectl apply -f-

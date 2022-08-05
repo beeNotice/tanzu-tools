@@ -15,7 +15,7 @@ k delete service.serving.knative.dev/tanzu-app-deploy -n dev
 kubectl delete pod --grace-period=0 --force podName
 
 # Live view
-k delete pods --all -n app-live-view
+kubectl -n app-live-view-connector delete pods -l=name=application-live-view-connector
 
 # Check applied convention
 # https://docs.vmware.com/en/Application-Live-View-for-VMware-Tanzu/1.0/docs/GUID-troubleshooting.html
@@ -37,5 +37,17 @@ kubectl get clusterbuilder.kpack.io default
 
 
 # Delivery not working
-You're using an RSA key with SHA-1, which is no longer allowed. Please use a newer client or a different key type.
+You re using an RSA key with SHA-1, which is no longer allowed. Please use a newer client or a different key type.
 => ssh-keygen -t ed25519 -N "" -C ""
+
+# Imgpkg
+Error uploading images: Put "https://fmartin.azurecr.io/v2/fmartin/tap-packages/manifests/sha256-34c099ded5683dc08063ca1f61edfaab71fcb2f1a8253fae3e91a237b8134f47.imgpkg": http: ContentLength=1371 with Body length 0
+=> Delete the image in the repository, and replay the imgpck
+
+# Debug TAP installation
+k get App -A
+k describe App tap -n tap-install
+
+
+# Special for TAP 1.2
+kubectl create secret generic k8s-reader-overlay --from-file=$TAP_FILES_PATH/data/rbac_overlay.yaml -n tap-install

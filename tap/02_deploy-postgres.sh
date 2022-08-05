@@ -1,35 +1,46 @@
 # Prepare Service Binding
-# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-install-operator.html#create-service-accounts
-export HELM_EXPERIMENTAL_OCI=1
-helm registry login registry.pivotal.io \
-       --username=$TANZU_NET_USER \
-       --password=$TANZU_NET_PASSWORD
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.8/tanzu-postgres-k8s/GUID-install-operator.html#installing-using-the-tanzu-cli
+TDS_VERSION=1.1.0
+imgpkg copy -b registry.tanzu.vmware.com/packages-for-vmware-tanzu-data-services/tds-packages:${TDS_VERSION} \
+     --to-repo $TAP_REGISTRY_HOSTNAME/fmartin/tds-packages
 
-helm pull oci://registry.pivotal.io/tanzu-sql-postgres/postgres-operator-chart --version v1.5.0 --untar --untardir /tmp
+# List secrets
+tanzu secret registry list -n tanzu-data
 
-k create ns postgresql
-kubectl create secret docker-registry regsecret \
-    --docker-server=https://registry.pivotal.io/ \
-    --docker-username=$TANZU_NET_USER \
-    --docker-password=$TANZU_NET_PASSWORD \
-    --namespace=postgresql
+# Create secret
+tanzu secret registry add tap-registry -n tanzu-data \
+    --username $TAP_REGISTRY_USERNAME \
+    --password $TAP_REGISTRY_PASSWORD \
+    --server $TAP_REGISTRY_HOSTNAME
 
-helm install my-postgres-operator /tmp/postgres-operator/ \
-  --namespace=postgresql \
-  --wait
+# Add repository
+kubectl create ns tanzu-data
+tanzu package repository add tanzu-data-services-repository \
+  --url $TAP_REGISTRY_HOSTNAME/fmartin/tds-packages:${TDS_VERSION} \
+  --namespace tanzu-data
 
 # Check
-kubectl get all --selector app=postgres-operator -n postgresql
-k get pod -n postgresql
+tanzu package available list -A
+
+# Install
+tanzu package install postgres \
+  --package-name postgres-operator.sql.tanzu.vmware.com \
+  --version 1.8.0 \
+  --namespace tanzu-data \
+  -f $TAP_FILES_PATH/data/postgresql/tds.yaml
+
+# Check
+tanzu package installed list -n tanzu-data
+kubectl get all --selector app=postgres-operator -n tanzu-data
 
 # Service Binding
-# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-creating-service-bindings.html
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.8/tanzu-postgres-k8s/GUID-creating-service-bindings.html
 kubectl apply -f $TAP_FILES_PATH/data/postgresql/resource-claims-postgres.yaml
 
 #kubectl apply -f $TAP_FILES_PATH/data/postgres-cross-namespace.yaml => Don't use anymore, on DB per ns
 
 # Deploy Postgresql - Update ns for dev & prod
-# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.5/tanzu-postgres-k8s/GUID-create-delete-postgres.html
+# https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.8/tanzu-postgres-k8s/GUID-create-delete-postgres.html
 # This is done using the create-additional-dev-space.sh script
 # ytt -f $TAP_FILES_PATH/data/postgresql/postgresql.yaml -v namespace=dev | kubectl apply -f-
 # Checks

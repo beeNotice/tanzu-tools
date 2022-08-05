@@ -1,2 +1,5 @@
 #!/bin/bash
-az aks start --resource-group rg-tanzu-demo --name aks-tanzu-demo
+
+RG_NAME=rg-tanzu-demo-12
+CLUSTER_NAME=tanzu-demo-fmartin
+az aks start --resource-group $RG_NAME --name $CLUSTER_NAME

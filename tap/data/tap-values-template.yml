@@ -1,4 +1,13 @@
 profile: full
+
+shared:
+  ingress_domain: tanzu.fmartin.tech
+appliveview:
+  ingressEnabled: "true"
+appliveview_connector:
+  backend:
+    sslDisabled: "true"
+
 # Installation fails if this is not set to true
 ceip_policy_disclosed: true
 excluded_packages:
@@ -6,38 +15,31 @@ excluded_packages:
   - workshops.learningcenter.tanzu.vmware.com
 
 buildservice:
-  kp_default_repository: ''
-  kp_default_repository_username: ""
-  kp_default_repository_password: ""
-  tanzunet_username: ""
-  tanzunet_password: ""
-  descriptor_name: "full"
-  enable_automatic_dependency_updates: false
+  kp_default_repository: 'FILL_IT'
+  kp_default_repository_username: "FILL_IT"
+  kp_default_repository_password: "FILL_IT"
+  tanzunet_username: "FILL_IT"
+  tanzunet_password: "FILL_IT"
 
 supply_chain: basic
 
 ootb_supply_chain_basic:
   registry:
-    server: ''
-    repository: ''
+    server: 'FILL_IT'
+    repository: 'FILL_IT'
   gitops:
     # Leave empty for public repos, add a secret for private repos.
     ssh_secret: ""
 
-learningcenter:
-  ingressDomain: "learningcenter.tanzu.fmartin.tech"
-
 tap_gui:
   service_type: ClusterIP
-  ingressEnabled: "true"
-  ingressDomain: "tanzu.fmartin.tech"
   app_config:
     app:
         baseUrl: http://tap-gui.tanzu.fmartin.tech
     integrations:
       github: 
         - host: github.com
-          token: 
+          token: FILL_IT
     catalog:
       locations:
         - type: url
@@ -64,8 +66,19 @@ cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 metadata_store:
-  app_service_type: 'LoadBalancer'
+  ns_for_export_app_cert: "dev"
+  app_service_type: ClusterIP
+
+scanning:
+  metadataStore:
+    url: "" # Disable embedded integration since it's deprecated
 
 api_portal:
   apiPortalServer:
     sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://tanzu-app-deploy-dev.tanzu.fmartin.tech/v3/api-docs"
+
+# Temporay fix for 1.2
+package_overlays:
+- name: tap-gui
+  secrets:
+  - name: k8s-reader-overlay

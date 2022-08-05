@@ -9,7 +9,9 @@ Domain :  vsphere.local > Add
 fmartin > Fmartin2022!
 
 # Create Group
-Groups > Add > tanzu-dev + Add fmartin as Member
+Groups > Add > tanzu-devops + Add fmartin as Member
+
+The name is sso:fmartin@vsphere.local
 
 ###########################################
 # DevOps Engineers - 

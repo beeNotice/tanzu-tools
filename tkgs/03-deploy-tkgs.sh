@@ -106,5 +106,6 @@ kubectl config use-context CONTEXT-NAME-IP
 # Update ns and url in tmc-registration.yaml
 kubectl create -f $TANZU_TOOLS_FILES_PATH/tkgs/data/tmc-registration.yaml
 
+
 # Check
 kubectl -n svc-tmc-c8 describe agentinstall tmc-agent-installer-config

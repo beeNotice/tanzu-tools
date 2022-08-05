@@ -17,7 +17,7 @@ http://tap-gui.tanzu.fmartin.tech/create?filters%5Bkind%5D=template&filters%5Bus
 ###########################################
 # App Deployment
 ###########################################
-tanzu apps workload create -f $TANZU_APP_FILES_PATH/config/workload.yaml
+tanzu apps workload create -f $TANZU_APP_FILES_PATH/config/workload.yaml -y
 
 # Follow logs
 tanzu apps workload tail tanzu-app-deploy -n dev --since 1m

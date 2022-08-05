@@ -31,3 +31,32 @@ Cluster > Add-ons > Add
 Disable 1.5.2
 
 NOTE: Synch will fail until 1.5.2 is disabled
+
+###########################################
+# Custom certificate
+###########################################
+# To register custom CA on all Clusters
+https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-376FCCD1-7743-4202-ACCA-56F214B6892F.html
+
+# Retrieve certificate
+echo | openssl s_client -servername harbor -connect vc01.h2o-4-946.h2o.vmware.com:443 |\
+  sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > certificate.crt
+
+# Check that the certificate is good
+curl --cacert certificate.crt https://vc01.h2o-4-946.h2o.vmware.com:443
+
+# To edit an existing Cluster
+# https://docs.vmware.com/fr/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-31BF8166-5FC8-4D43-933D-5797F3BE4A36.html
+
+k edit TanzuKubernetesCluster fmartin-prod-tmc
+
+trust: 
+  additionalTrustedCAs:
+    - name: harbor
+    data: base64encoded
+
+# Check (VM will be recreated)
+k get TanzuKubernetesCluster fmartin-prod-tmc -o yaml
+kubectl run busybox --image=xxxx
+
+
