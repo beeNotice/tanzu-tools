@@ -16,8 +16,5 @@ kubectl config set-context --current --namespace=fmartin
 kp build logs spring-petclinic-tanzu -n fmartin
 tanzu apps workload get spring-petclinic-tanzu -n fmartin
 
-
-
-
 ## Notes
 * Do not use parent pom and subpath, the parent won t be resolvable

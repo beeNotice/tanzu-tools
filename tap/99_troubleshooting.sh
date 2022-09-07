@@ -48,6 +48,17 @@ Error uploading images: Put "https://fmartin.azurecr.io/v2/fmartin/tap-packages/
 k get App -A
 k describe App tap -n tap-install
 
+###########################################
+# Backstage Catalog
+###########################################
+# Logs are in the pod in the tap-gui
+k logs server-5b4b49c5c6-fp7sv -n tap-gui
 
+# Update Catalog after a Git Push
+k delete pod server-5b4b49c5c6-fp7sv -n tap-gui
+
+###########################################
 # Special for TAP 1.2
+###########################################
+# Fix for deployment
 kubectl create secret generic k8s-reader-overlay --from-file=$TAP_FILES_PATH/data/rbac_overlay.yaml -n tap-install

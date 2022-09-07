@@ -32,8 +32,6 @@ kubectl get sourcescan -o yaml
 # https://vmware.slack.com/archives/C02DQ1P7E2J/p1643301179060400
 
 # Create ns prod + git-ssh (03_supply-chain-install.sh)
-
-
 # Custom Delivery
 k get ClusterDelivery delivery-basic -o yaml
 k get ClusterDeploymentTemplate app-deploy -o yaml
@@ -53,3 +51,7 @@ k apply -f $TAP_FILES_PATH/data/Deliverable.yaml
 k get Deliverable -A
 
 kubectl get gitrepository,app,services.serving -n prod
+
+
+# Deep dive only if requested (the intent is included in the config-template)
+k get ClusterConfigTemplate convention-template -o yaml

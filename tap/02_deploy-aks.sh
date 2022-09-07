@@ -10,7 +10,6 @@ az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
 # RBAC
 kubectl create clusterrolebinding tap-psp-rolebinding --group=system:authenticated --clusterrole=psp:privileged
 
-
 ###########################################
 # Tanzu CLI
 ###########################################
@@ -187,6 +186,9 @@ tanzu package installed update tap \
      -v $TAP_VERSION \
      --values-file $TAP_FILES_PATH/data/tap-values-full.yml \
      -n tap-install
+
+# Force Catalog refresh
+k delete pod server-886d5b95f-tnq2j -n tap-gui
 
 # Update TBS
 docker login -u fmartin@vmware.com registry.pivotal.io

@@ -3,7 +3,7 @@
 apiVersion: sql.tanzu.vmware.com/v1
 kind: Postgres
 metadata:
-  name: #@ data.values.db
+  name: postgres-tanzu-app
   namespace: #@ data.values.namespace
 spec:
   storageClassName: default
@@ -33,7 +33,6 @@ spec:
         cpu: 0.1
         memory: 100Mi
   pgConfig:
-    dbname: #@ data.values.db
     username: pgadmin
     appUser: pgappuser
   postgresVersion:

@@ -42,7 +42,9 @@ kubectl apply -f $TAP_FILES_PATH/data/postgresql/resource-claims-postgres.yaml
 # Deploy Postgresql - Update ns for dev & prod
 # https://docs.vmware.com/en/VMware-Tanzu-SQL-with-Postgres-for-Kubernetes/1.8/tanzu-postgres-k8s/GUID-create-delete-postgres.html
 # This is done using the create-additional-dev-space.sh script
-# ytt -f $TAP_FILES_PATH/data/postgresql/postgresql.yaml -v namespace=dev | kubectl apply -f-
+ytt -f $TAP_FILES_PATH/data/postgresql/postgresql.yaml -v namespace=dev | kubectl apply -f-
+ytt -f $TAP_FILES_PATH/data/postgresql/postgresql.yaml -v namespace=prod | kubectl apply -f-
+
 # Checks
 k get Postgres -n dev
 k get pods -n dev
@@ -67,3 +69,4 @@ kubectl exec -it postgres-tanzu-app-0 -n prod -- bash -c "psql"
 \c postgres-tanzu-app
 UPDATE config set val='PROD' where name = 'ENV';
 UPDATE config set val='#993333' where name = 'COLOR';
+
