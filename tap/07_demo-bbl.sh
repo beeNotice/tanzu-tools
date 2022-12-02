@@ -12,12 +12,10 @@ http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5B
 # Accelerators
 http://tap-gui.tanzu.fmartin.tech/create?filters%5Bkind%5D=template&filters%5Buser%5D=all
 
+# Develop App - Eclipse
+
 # App Deployment
 tanzu apps workload create -f $TANZU_APP_FILES_PATH/config/workload.yaml -y
-
-# Follow
-tanzu apps workload tail tanzu-app-deploy -n dev --since 1m
-tanzu apps workload get tanzu-app-deploy -n dev
 
 # Access App & Infos
 http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
@@ -29,64 +27,25 @@ http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5B
 http://tap-gui.tanzu.fmartin.tech/api-docs?filters%5Bkind%5D=api&filters%5Buser%5D=all
 http://api-portal.tanzu.fmartin.tech/
 
-###########################################
-# Supply Chain
-###########################################
-# Supply chain details
-# C:\Users\fmartin\OneDrive - VMware, Inc\Meetings\Fabien\VMware Tanzu - TAP - fmartin.pptx
-PPT | Path to Production with TAP
-  - Supply Chain by type of applications
-  - Customizable
-  - Integrate with your ecosystem
-  - Multi-env deployment
-  - Orchestration vs Choreography
-  - The Right Abstraction per Persona
-  - Cloud Native Buildpacks
+http://tanzu-app-deploy-dev.tanzu.fmartin.tech/v3/api-docs
+http://tanzu-app-deploy-dev.tanzu.fmartin.tech/swagger-ui/index.html
 
-# Supply Chain Configuration
-tanzu apps cluster-supply-chain list
-tanzu apps cluster-supply-chain get source-test-scan-to-url
-
-http://tap-gui.tanzu.fmartin.tech/supply-chain
-  - Follow
-  - Security
-
-###########################################
 # Cloud Native Buildpacks
-###########################################
-# Check Open SSL version
-http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
+http://tap-gui.tanzu.fmartin.tech/supply-chain
 
-https://buildpacks.io/
+# Patch
+kp clusterbuilder patch default --stack base
 
 # Current Status
 kp build list -n dev
 kp build logs tanzu-app-deploy -n dev
 kp build status tanzu-app-deploy -n dev
 
-# Patch
-k get ClusterBuilder default -o yaml
-kp clusterstack list
-kp clusterbuilder patch default --stack base
-
-# Check as above
-
-###########################################
 # Deployment to Prod
-###########################################
-https://github.com/beeNotice/tanzu-app-deploy
-
-# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.2/tap/GUID-multicluster-getting-started.html
 k apply -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k get pods -n prod
 
 http://tanzu-app-deploy-prod.tanzu.fmartin.tech/
-
-
-PPT | Summary
-  - TBS
-  - Path to Production
-  - Deliverable
 
 ###########################################
 # Knative - Autoscaling
@@ -104,3 +63,4 @@ k delete -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k delete -f $TANZU_APP_FILES_PATH/config/workload.yaml
 
 kp clusterbuilder patch default --stack old
+

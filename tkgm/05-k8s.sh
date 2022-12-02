@@ -42,6 +42,8 @@ kubectl exec nginx -n test -- bash -c "echo 'Hello from pod A' >> /data/hello_wo
 kubectl exec nginx -n test -- bash -c "echo 'Hello from pod A again' >> /data/hello_world"
 kubectl exec nginx -n test -- bash -c "cat /data/hello_world"
 
+# Can Play the backup/restore here
+
 # Clean
 k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/02-pod-pvc.yaml
 k delete -f $TANZU_TOOLS_FILES_PATH/k8s/pvc/01-ReadWriteOnce-pvc.yaml

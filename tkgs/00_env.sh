@@ -1,8 +1,8 @@
 ###########################################
 # vSphere
 ###########################################
-export GOVC_URL="vcsa.cpod-tanzu.az-fkd.cloud-garage.net"
-export GOVC_USERNAME="administrator@cpod-tanzu.az-fkd.cloud-garage.net"
+export GOVC_URL="vc01.h2o-4-3111.h2o.vmware.com"
+export GOVC_USERNAME="administrator@vsphere.local"
 export GOVC_PASSWORD=""
 export GOVC_DATACENTER="Datacenter"
 export GOVC_NETWORK="Extra"
@@ -15,9 +15,9 @@ export KUBECTL_VSPHERE_PASSWORD=$GOVC_PASSWORD
 # Jumpbox
 ###########################################
 # Name of the user in the jumpbox VM
-VM_USER=tanzu
+VM_USER=tkgs
 # Folder to put cli binaries
-BIN_FOLDER=/usr/local/bin/
+BIN_FOLDER=/home/tkgs/bin/
 # Retrieve link from the vSphere Cluster > Namespaces > Summary > Link to CLI Tools
 # https://[SUPERVISOR-CLUSTER-IP]/wcp/plugin/[OS]-amd64/vsphere-plugin.zip
 KUBECTL_LINK=https://10.220.8.82/wcp/plugin/linux-amd64/vsphere-plugin.zip
@@ -46,7 +46,7 @@ ALB_SSH_KEY="$(cat ~/.ssh/id_rsa.pub)"
 # Kubernetes
 ###########################################
 # Workload Management > Supervisor Clusters > Controle Plane Node Address
-CONTROL_PLANE_IP=10.16.2.13
+CONTROL_PLANE_IP=10.220.39.226
 
 # Path to tanzu-tools files
 TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"

@@ -12,3 +12,6 @@ sudo rm /etc/bash_completion.d/kubectl
 # Remove Harbor Certs
 sudo rm -Rf /etc/docker/certs.d/$HARBOR_URL
 sudo rm -Rf ~/.docker/tls/$HARBOR_URL
+
+# Delete all Group
+az group delete --name ContainersDev

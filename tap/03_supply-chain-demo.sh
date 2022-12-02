@@ -52,6 +52,56 @@ k get Deliverable -A
 
 kubectl get gitrepository,app,services.serving -n prod
 
-
 # Deep dive only if requested (the intent is included in the config-template)
 k get ClusterConfigTemplate convention-template -o yaml
+
+___________________________________________
+# Sonarqube
+# https://bitnami.com/stack/sonarqube/helm
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install \
+    -n sonarqube \
+    --create-namespace \
+    sonarqube \
+    bitnami/sonarqube
+
+
+export SERVICE_IP=$(kubectl get svc --namespace sonarqube sonarqube --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+echo "SonarQube URL: http://$SERVICE_IP/"
+
+echo Username: user
+echo Password: $(kubectl get secret --namespace sonarqube sonarqube -o jsonpath="{.data.sonarqube-password}" | base64 -d)
+
+
+# Install tasks
+# https://github.com/tektoncd/catalog/tree/main/task/sonarqube-scanner/0.2/
+
+kubectl apply -f https://api.hub.tekton.dev/v1/resource/tekton/task/git-clone/0.5/raw -n dev
+kubectl apply -f https://api.hub.tekton.dev/v1/resource/tekton/task/sonarqube-scanner/0.2/raw -n dev
+
+# Install Pipeline
+# https://gitlab.eng.vmware.com/supply-chain-choreographer/catalog/-/blob/main/src/ootb-templates/bundle/config/testing-pipeline.yaml
+kubectl apply -f $TAP_FILES_PATH/data/tekton-pipeline-sonar.yaml -n dev
+k get pipeline,pipelinerun,pvc -n dev
+
+
+https://github.com/x95castle1/custom-cartographer-supply-chain-examples
+https://gitlab.com/drawsmcgraw/cartographer-sonar/-/blob/master/sonarqube-task.yml
+
+https://hub.tekton.dev/tekton/task/sonarqube-scanner
+https://github.com/tektoncd/catalog/tree/main/task/sonarqube-scanner/0.2
+
+
+# Build
+# https://gitlab.com/drawsmcgraw/cartographer-sonar/
+
+# Export and update
+kubectl get clustersupplychain source-to-url -o yaml
+kubectl get clustersourcetemplate testing-pipeline -o yaml
+kubectl get clusterruntemplate tekton-source-pipelinerun -o yaml
+
+# Deploy
+kubectl apply -f $TAP_FILES_PATH/supply-chain/
+k get clustersupplychain
+
+# Update workoad type to sonar and test

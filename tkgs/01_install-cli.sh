@@ -6,7 +6,7 @@
 # Kubernetes
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 # Retrieve link from the vCenter Namespace
-KUBECTL_LINK=https://10.220.47.162/wcp/plugin/linux-amd64/vsphere-plugin.zip
+KUBECTL_LINK=https://${CONTROL_PLANE_IP}/wcp/plugin/linux-amd64/vsphere-plugin.zip
 curl -LO $KUBECTL_LINK --insecure
 unzip vsphere-plugin.zip -d vsphere-plugin
 chmod +x vsphere-plugin/bin/*

@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: sonar-tekton-pipeline
+  namespace: dev
+  labels:
+    apps.tanzu.vmware.com/pipeline: sonar      # (!) required
+spec:
+
+  workspaces:
+    - name: shared-workspace
+    - name: sonar-settings
+
+  params:
+    - name: source-url                        # (!) required
+    - name: source-revision                   # (!) required
+  tasks:
+    
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+      params:
+        - name: url
+          value: https://github.com/beeNotice/tanzu-app
+        - name: subdirectory
+          value: ""
+        - name: deleteExisting
+          value: "true"
+
+    - name: code-analysis
+      taskRef:
+        name: sonarqube-scanner
+      runAfter:
+        - fetch-repository
+      params:
+        - name: SONAR_HOST_URL
+          value: http://51.138.203.38/
+        - name: SONAR_PROJECT_KEY
+          value: tanzu-app
+
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+        - name: sonar-settings
+          workspace: sonar-settings

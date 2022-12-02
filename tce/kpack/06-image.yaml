@@ -4,7 +4,7 @@ metadata:
   name: tanzu-simple
   namespace: build
 spec:
-  tag: harbor.withtanzu.com/fmartin/tanzu-simple
+  tag: harbor-fmartin-tanzu.francecentral.cloudapp.azure.com/fmartin/tanzu-simple
   serviceAccountName: demo-service-account
   builder:
     name: demo-builder

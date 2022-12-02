@@ -147,3 +147,22 @@ kubectl get adc install-ako-for-management-cluster -o yaml
 k logs ako-operator-controller-manager-6fdc98c4d8-vpmzj -n tkg-system-networking manager
 
 
+###########################################
+# Docker DNS resolution conflict
+###########################################
+
+If you can ping a host on windows but not on the sandbox
+Check that there is no overlap on the networks
+
+route -n
+
+If Docker is on the same network that the target one, we can fix it by changin it's ip
+
+sudo vim /etc/docker/daemon.json
+
+{
+  "default-address-pools":
+  [
+    {"base":"172.33.0.0/16", "size":24}
+  ]
+}

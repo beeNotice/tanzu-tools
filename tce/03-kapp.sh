@@ -8,11 +8,7 @@ k get pods -n tanzu-simple
 
 # Preprare env
 # https://hub.docker.com/r/paketobuildpacks/build/
-k apply -f kpack/
-k get Image -n cnb-nodejs
-
-kp build logs cnb-nodejs -n cnb-nodejs
-kp build list cnb-nodejs -n cnb-nodejs
+k apply -f $TANZU_TCE_FILES_PATH/kpack/
 
 # Image description
 cat image.yaml

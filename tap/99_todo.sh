@@ -76,3 +76,63 @@ kubectl get pods -n prod
 
 k logs tanzu-app-deploy-00003-deployment-7ccb67dd5d-24hbt -n prod workload
 => Started TanzuAppApplication in 0.614 seconds
+
+
+
+
+
+
+
+________________________________________________________________________________
+k get resourceclaim
+k get serviceBinding
+
+cat <<EOF | kubectl apply - f- 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vac-db-binding-compatible
+type: Opaque
+stringData:
+  type: postgresql
+  provider: vac
+  host: my-postgresql
+  port: "5432"
+  database: "music"
+  username: "postgres"
+  password: "postgres"
+EOF
+
+tanzu service claim create vac-db-claim-compatible \
+  --resource-name vac-db-binding-compatible \
+  --resource-kind Secret \
+  --resource-api-version v1
+  
+https://github.com/tsalm-pivotal/spring-cloud-demo-tap/blob/main/tap/workload-order-service.yaml
+  serviceClaims:
+  - name: db
+    ref:
+      apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+      kind: ResourceClaim
+      name: vac-db-binding-compatible
+
+➜  VAC cat clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: stk-secret-reader
+  labels:
+    servicebinding.io/controller: "true"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+
+https://docs.vmware.com/en/Services-Toolkit-for-VMware-Tanzu-Application-Platform/0.8/svc-tlk/GUID-usecases-direct_secret_references.html
+
+

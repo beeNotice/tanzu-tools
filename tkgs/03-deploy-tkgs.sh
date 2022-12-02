@@ -1,4 +1,6 @@
 
+export PATH=$BIN_FOLDER:$PATH 
+
 # Login to management
 kubectl vsphere login --server $CONTROL_PLANE_IP --vsphere-username $GOVC_USERNAME --insecure-skip-tls-verify
 kubectl config use-context $TKG_NAMESPACE

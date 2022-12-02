@@ -6,7 +6,7 @@ spec:
   serviceAccountRef:
     name: demo-service-account
     namespace: build
-  tag: harbor.withtanzu.com/fmartin/builder
+  tag: harbor-fmartin-tanzu.francecentral.cloudapp.azure.com/fmartin/builder
   stack:
     name: old
     kind: ClusterStack

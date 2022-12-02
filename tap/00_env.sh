@@ -24,6 +24,7 @@ TANZU_TOOLS_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-tools/"
 export TAP_FILES_PATH="$TANZU_TOOLS_FILES_PATH/tap/"
 # Path to app files
 TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-app"
+#TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-simple/tanzu-simple"
 # Path to Petclinic
 TANZU_PETCLINIC_FILES_PATH="$WORKSPACE_FILES_PATH/spring-petclinic-tanzu"
 

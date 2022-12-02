@@ -18,8 +18,16 @@ kubectl get tanzukubernetesreleases
 
 # Update
 # https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-A7A0BC51-F49D-4E08-B4DD-782D84CB3762.html
+
 kubectl edit tanzukubernetescluster tanzu-cluster-shared
 
 # Update the TKR NAME string in the
 #  - spec.topology.controlPlane.tkr.refernece.name
 #  - spec.topology.nodePools[*].tkr.reference.name
+
+
+# Connect to supervisor Cluster
+kctx IP
+kubectl get tanzukubernetesclusters -A
+kubectl edit tanzukubernetescluster clusterName -n namesPace name
+

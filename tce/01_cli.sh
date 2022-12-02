@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. 00_env.sh
+
 # Common
 sudo apt-get update
 sudo apt-get -y install curl grep sed jq unzip bash-completion dos2unix bash-completion
@@ -32,6 +34,7 @@ sudo chmod +x $BIN_FOLDER/kubectl
 # https://github.com/vmware-tanzu/kpack-cli/releases
 wget -O kp "https://github.com/vmware-tanzu/kpack-cli/releases/download/v0.4.2/kp-linux-0.4.2"
 sudo mv kp $BIN_FOLDER/kp
+sudo chmod +x $BIN_FOLDER/kp
 
 # kubectx & kubens
 git clone https://github.com/ahmetb/kubectx

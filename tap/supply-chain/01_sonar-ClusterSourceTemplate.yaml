@@ -1,0 +1,45 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  name: sonar-pipeline
+spec:
+  healthRule:
+    singleConditionType: Ready
+  revisionPath: .status.outputs.revision
+  urlPath: .status.outputs.url
+  ytt: |
+    #@ load("@ytt:data", "data")
+
+    #@ def merge_labels(fixed_values):
+    #@   labels = {}
+    #@   if hasattr(data.values.workload.metadata, "labels"):
+    #@     labels.update(data.values.workload.metadata.labels)
+    #@   end
+    #@   labels.update(fixed_values)
+    #@   return labels
+    #@ end
+
+    ---
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable
+    metadata:
+      name: #@ data.values.workload.metadata.name
+      labels: #@ merge_labels({ "app.kubernetes.io/component": "test" })
+    spec:
+      #@ if/end hasattr(data.values.workload.spec, "serviceAccountName"):
+      serviceAccountName: #@ data.values.workload.spec.serviceAccountName
+
+      runTemplateRef:
+        name: tekton-source-sonar-pipelinerun
+        kind: ClusterRunTemplate
+
+      selector:
+        resource:
+          apiVersion: tekton.dev/v1beta1
+          kind: Pipeline
+        matchingLabels:
+          apps.tanzu.vmware.com/pipeline: sonar
+
+      inputs:
+        source-url: #@ data.values.source.url
+        source-revision: #@ data.values.source.revision

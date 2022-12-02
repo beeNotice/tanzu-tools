@@ -26,6 +26,7 @@ k get ClusterSupplyChain source-test-scan-to-url -o yaml
 
 # Create Tekton Pipeline
 kubectl apply -f $TAP_FILES_PATH/data/tekton-pipeline.yaml
+# kubectl apply -f $TAP_FILES_PATH/data/tekton-pipeline-sonar.yaml
 k get Pipeline -n dev
 
 
