@@ -13,14 +13,13 @@ spec:
         reference:
           name: v1.22.9---vmware.1-tkg.1.cc71bc8
     nodePools:
-    - name: worker-nodepool-prod
-      replicas: 3
-      vmClass: best-effort-medium
-      storageClass: vc01cl01-t0compute
-      tkr:
-        reference:
-          name: v1.22.9---vmware.1-tkg.1.cc71bc8
+      - name: worker-nodepool-prod
+        replicas: 3
+        vmClass: best-effort-medium
+        storageClass: vc01cl01-t0compute
+        tkr:
+          reference:
+            name: v1.22.9---vmware.1-tkg.1.cc71bc8
   settings:
     storage:
       defaultClass: vc01cl01-t0compute
-     

@@ -63,7 +63,10 @@ k delete pod server-5b4b49c5c6-fp7sv -n tap-gui
 # Fix for deployment
 kubectl create secret generic k8s-reader-overlay --from-file=$TAP_FILES_PATH/data/rbac_overlay.yaml -n tap-install
 
+###########################################
 # Metadata store fails
+###########################################
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/scst-store-troubleshooting.html#certificate-expiries-13
 k logs metadata-store-app-f85cfcc49-xxgns -n metadata-store metadata-store-app
 possibly because of \"x509: invalid signature: parent certificate cannot sign this kind of certificate
 
@@ -72,3 +75,5 @@ possibly because of \"x509: invalid signature: parent certificate cannot sign th
   - grype.scanning.apps.tanzu.vmware.com
   - scanning.apps.tanzu.vmware.com
 
+# Reinstall the Metadastore connectivity
+headers: Authorization
