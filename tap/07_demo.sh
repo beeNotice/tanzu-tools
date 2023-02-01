@@ -82,7 +82,6 @@ k get pods -n prod
 
 http://tanzu-app-deploy-prod.tanzu.fmartin.tech/
 
-
 PPT | Summary
   - TBS
   - Path to Production

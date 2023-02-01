@@ -7,11 +7,10 @@ metadata:
     app.tanzu.vmware.com/deliverable-type: web
 spec:
   params:
-  - name: gitops_ssh_secret
-    value: git-ssh
+    - name: gitops_ssh_secret
+      value: git-ssh
   source:
     git:
       url: ssh://git@github.com/beeNotice/tanzu-app-deploy
       ref:
         branch: main
-

@@ -51,3 +51,9 @@ curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/instal
 # Java
 sudo apt install openjdk-17-jdk-headless
 
+# Install kp
+# https://network.pivotal.io/products/build-service/
+# wget -O kp "$KP_URL"
+sudo cp $TANZU_TOOLS_FILES_PATH/binaries/kp-linux-0.4.2 $BIN_FOLDER/kp
+sudo chmod +x $BIN_FOLDER/kp
+

@@ -75,5 +75,5 @@ possibly because of \"x509: invalid signature: parent certificate cannot sign th
   - grype.scanning.apps.tanzu.vmware.com
   - scanning.apps.tanzu.vmware.com
 
-# Reinstall the Metadastore connectivity
-headers: Authorization
+# Reinstall from - Enable CVE scan results
+03_supply-chain-install.sh

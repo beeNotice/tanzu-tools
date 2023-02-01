@@ -1,17 +1,13 @@
 registry:
-  server: 'fmartin.azurecr.io'
-  repository: 'fmartin/tanzu-app-tap'
+  server: "fmartin.azurecr.io"
+  repository: "fmartin/tanzu-app-tap"
 
 gitops:
-  # DEPRECATED - See https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.2/tap/GUID-scc-gitops-vs-regops.html#deprecated-parameters-1
   server_address: ssh://git@github.com/
   repository_owner: beeNotice
-  repository_name: tanzu-app-deploy 
+  repository_name: tanzu-app-deploy
   branch: main
   user_name: tanzu-test
   user_email: tanzu-test@cluster.azure
   commit_message: "TAP - New version"
   ssh_secret: git-ssh
-
-cluster_builder: default
-service_account: default
