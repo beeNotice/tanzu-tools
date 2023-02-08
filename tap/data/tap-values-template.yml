@@ -1,7 +1,11 @@
 profile: full
 
 shared:
-  ingress_domain: tanzu.fmartin.tech
+  ingress_domain: tanzu.beenotice.eu
+  image_registry:
+    project_path: "fmartin.azurecr.io/fmartin/supply-chain"
+    username: "REPLACE_ME"
+    password: "REPLACE_ME"
 appliveview:
   ingressEnabled: "true"
 appliveview_connector:
@@ -13,20 +17,22 @@ ceip_policy_disclosed: true
 excluded_packages:
   - learningcenter.tanzu.vmware.com
   - workshops.learningcenter.tanzu.vmware.com
+  - policy.apps.tanzu.vmware.com
+  - image-policy-webhook.signing.apps.tanzu.vmware.com
 
 buildservice:
-  kp_default_repository: 'FILL_IT'
-  kp_default_repository_username: "FILL_IT"
-  kp_default_repository_password: "FILL_IT"
-  tanzunet_username: "FILL_IT"
-  tanzunet_password: "FILL_IT"
+  kp_default_repository: "fmartin.azurecr.io/fmartin/build-service/"
+  kp_default_repository_username: "REPLACE_ME"
+  kp_default_repository_password: "REPLACE_ME"
+  tanzunet_username: "REPLACE_ME"
+  tanzunet_password: "REPLACE_ME"
 
 supply_chain: basic
 
 ootb_supply_chain_basic:
   registry:
-    server: 'FILL_IT'
-    repository: 'FILL_IT'
+    server: "fmartin.azurecr.io"
+    repository: "fmartin/tanzu-app-tap"
   gitops:
     # Leave empty for public repos, add a secret for private repos.
     ssh_secret: ""
@@ -35,20 +41,29 @@ tap_gui:
   service_type: ClusterIP
   app_config:
     app:
-        baseUrl: http://tap-gui.tanzu.fmartin.tech
+      baseUrl: http://tap-gui.tanzu.beenotice.eu
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        headers:
+          Authorization: "Bearer REPLACE_ME"
+          X-Custom-Source: project-star
     integrations:
-      github: 
+      github:
         - host: github.com
-          token: FILL_IT
+          token: REPLACE_ME
     catalog:
       locations:
         - type: url
-          # Catalog repository
           target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
+        - type: url
+          target: https://github.com/beeNotice/hungryman/blob/main/catalog/catalog-info.yaml
     backend:
-        baseUrl: http://tap-gui.tanzu.fmartin.tech
-        cors:
-            origin: http://tap-gui.tanzu.fmartin.tech
+      baseUrl: http://tap-gui.tanzu.beenotice.eu
+      cors:
+        origin: http://tap-gui.tanzu.beenotice.eu
 
 grype:
   namespace: "dev"
@@ -61,7 +76,7 @@ contour:
 
 cnrs:
   provider: local
-  domain_name: "tanzu.fmartin.tech"
+  domain_name: "tanzu.beenotice.eu"
   # Fix domain template for TSL certficates
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
@@ -75,10 +90,4 @@ scanning:
 
 api_portal:
   apiPortalServer:
-    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://tanzu-app-deploy-dev.tanzu.fmartin.tech/v3/api-docs"
-
-# Temporay fix for 1.2
-package_overlays:
-- name: tap-gui
-  secrets:
-  - name: k8s-reader-overlay
+    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://tanzu-app-deploy-dev.tanzu.beenotice.eu/v3/api-docs"

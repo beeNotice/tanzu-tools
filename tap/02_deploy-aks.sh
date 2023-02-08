@@ -164,15 +164,21 @@ tanzu apps workload delete -f $TAP_FILES_PATH/data/workload.yaml -y
 # https://network.tanzu.vmware.com/products/tbs-dependencies#/releases/959846
 # Same credentials as Tanzu Net
 docker login -u fmartin@vmware.com registry.pivotal.io
-kp clusterstack create old \
---build-image registry.pivotal.io/tanzu-base-bionic-stack/build@sha256:7f4777ef6f9bfc01a884ae81ecc5fb4a2eeba5c28b59c2b94666a4e5e35f8d4c \
---run-image registry.pivotal.io/tanzu-base-bionic-stack/run@sha256:87d92d68b7f5c4c22da6985947e585dc95346898adf82c2c3708dd0ef7a9bef3
+kp clusterstack create new \
+--build-image registry.pivotal.io/tanzu-base-bionic-stack/build@sha256:63ac574296e1a2032e3a14f7a2a351e771b32de10772cbb699e9f8b38442142f \
+--run-image registry.pivotal.io/tanzu-base-bionic-stack/run@sha256:9f4bde6e96bae86246f725d6e76ea39ad460b50356c29869794b642908d641c4
 
 kp clusterstack list
-kp clusterbuilder patch default --stack old
+kp clusterbuilder patch default --stack base
 
 wget https://raw.githubusercontent.com/beeNotice/tanzu-simple/main/config/workload.yaml
 tanzu apps workload create -f workload.yaml -y
 
-# see 07_demo.sh
+kp clusterbuilder patch default --stack new
+
+###########################################
+# Promotion
+###########################################
+wget https://raw.githubusercontent.com/beeNotice/tanzu-simple/main/config/deliverable.yaml
+k apply -f deliverable.yaml
 
