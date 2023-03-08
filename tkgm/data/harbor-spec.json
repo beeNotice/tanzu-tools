@@ -1,0 +1,79 @@
+{
+  "DiskProvisioning": "thin",
+  "IPAllocationPolicy": "dhcpPolicy",
+  "IPProtocol": "IPv4",
+  "PropertyMapping": [
+    {
+      "Key": "guestinfo.root_password",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.allow_root_ssh",
+      "Value": "True"
+    },
+    {
+      "Key": "guestinfo.harbor_hostname",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.harbor_admin_password",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.harbor_database_password",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.harbor_scanner_enable",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.harbor_selfsigned_cert",
+      "Value": "True"
+    },
+    {
+      "Key": "guestinfo.harbor_ca",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.harbor_server_cert",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.harbor_server_key",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.network_ip_address",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.network_netmask",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.network_gateway",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.network_dns_server",
+      "Value": ""
+    },
+    {
+      "Key": "guestinfo.network_dns_domain",
+      "Value": ""
+    }
+  ],
+  "NetworkMapping": [
+    {
+      "Name": "nic0",
+      "Network": ""
+    }
+  ],
+  "Annotation": "Harbor ova vSphere image - VMware Photon OS 64-bit and Harbor v2.6.3+vmware.1",
+  "MarkAsTemplate": false,
+  "PowerOn": false,
+  "InjectOvfEnv": false,
+  "WaitForIP": false,
+  "Name": null
+}

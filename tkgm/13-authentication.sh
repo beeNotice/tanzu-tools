@@ -111,7 +111,7 @@ Or control_plane_endpoint
 # Export connexion file
 tanzu cluster kubeconfig get dev01 --export-file dev01_kubeconfig
 exit
-scp ubuntu@10.220.2.181:/home/ubuntu/dev01_kubeconfig .
+scp ubuntu@10.220.41.110:/home/ubuntu/dev01_kubeconfig .
 kubectl get pods -A --kubeconfig dev01_kubeconfig
 
 # Register config in session

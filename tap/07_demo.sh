@@ -7,10 +7,10 @@ PPT | Introduction
 # Developer experience
 ###########################################
 # Explore
-http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
+http://tap-gui.tanzu.beenotice.eu/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
 
 # Accelerators
-http://tap-gui.tanzu.fmartin.tech/create?filters%5Bkind%5D=template&filters%5Buser%5D=all
+http://tap-gui.tanzu.beenotice.eu/create?filters%5Bkind%5D=template&filters%5Buser%5D=all
 
 # App Deployment
 tanzu apps workload create -f $TANZU_APP_FILES_PATH/config/workload.yaml -y
@@ -20,14 +20,14 @@ tanzu apps workload tail tanzu-app-deploy -n dev --since 1m
 tanzu apps workload get tanzu-app-deploy -n dev
 
 # Access App & Infos
-http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
+http://tap-gui.tanzu.beenotice.eu/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
 - Status
 - Logs
 - Live View
 
 # Access APIs
-http://tap-gui.tanzu.fmartin.tech/api-docs?filters%5Bkind%5D=api&filters%5Buser%5D=all
-http://api-portal.tanzu.fmartin.tech/
+http://tap-gui.tanzu.beenotice.eu/api-docs?filters%5Bkind%5D=api&filters%5Buser%5D=all
+http://api-portal.tanzu.beenotice.eu/
 
 ###########################################
 # Supply Chain
@@ -47,7 +47,7 @@ PPT | Path to Production with TAP
 tanzu apps cluster-supply-chain list
 tanzu apps cluster-supply-chain get source-test-scan-to-url
 
-http://tap-gui.tanzu.fmartin.tech/supply-chain
+http://tap-gui.tanzu.beenotice.eu/supply-chain
   - Follow
   - Security
 
@@ -55,7 +55,7 @@ http://tap-gui.tanzu.fmartin.tech/supply-chain
 # Cloud Native Buildpacks
 ###########################################
 # Check Open SSL version
-http://tap-gui.tanzu.fmartin.tech/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
+http://tap-gui.tanzu.beenotice.eu/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
 
 https://buildpacks.io/
 
@@ -67,7 +67,7 @@ kp build status tanzu-app-deploy -n dev
 # Patch
 k get ClusterBuilder default -o yaml
 kp clusterstack list
-kp clusterbuilder patch default --stack base
+kp clusterbuilder patch default --stack new
 
 # Check as above
 
@@ -80,7 +80,7 @@ https://github.com/beeNotice/tanzu-app-deploy
 k apply -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k get pods -n prod
 
-http://tanzu-app-deploy-prod.tanzu.fmartin.tech/
+http://tanzu-app-deploy-prod.tanzu.beenotice.eu/
 
 PPT | Summary
   - TBS
@@ -91,7 +91,7 @@ PPT | Summary
 # Knative - Autoscaling
 ###########################################
 # Prime
-http://tanzu-app-deploy-prod.tanzu.fmartin.tech/prime/900003883
+http://tanzu-app-deploy-prod.tanzu.beenotice.eu/prime/900003883
 
 # Run performance
 watch kubectl get pods --selector=app.kubernetes.io/component=run -n prod
@@ -102,4 +102,4 @@ watch kubectl get pods --selector=app.kubernetes.io/component=run -n prod
 k delete -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k delete -f $TANZU_APP_FILES_PATH/config/workload.yaml
 
-kp clusterbuilder patch default --stack old
+kp clusterbuilder patch default --stack default

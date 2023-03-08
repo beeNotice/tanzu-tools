@@ -2,7 +2,7 @@
 # Deployment
 ###########################################
 # Path to tanzu-tools files
-TANZU_TOOLS_FILES_PATH="/mnt/workspaces/tanzu-tools"
+TANZU_TOOLS_FILES_PATH="/mnt/c/Dev/workspaces/tanzu-tools/"
 # Path to k8s deployment files
 K8S_FILES_PATH="$TANZU_TOOLS_FILES_PATH/k8s/"
 # Namespace to deploy tanzu package

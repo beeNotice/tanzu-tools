@@ -22,7 +22,7 @@ TANZU_TOOLS_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-tools/"
 # Path to k8s deployment files
 export TAP_FILES_PATH="$TANZU_TOOLS_FILES_PATH/tap/"
 # Path to app files
-TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-simple/tanzu-simple"
+TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-simple"
 
 ###########################################
 # Imports

@@ -222,6 +222,8 @@ sudo cp harbor.crt /etc/docker/certs.d/$NOTARY_URL/ca.crt
 mkdir -p ~/.docker/tls/$NOTARY_URL
 sudo cp harbor.crt ~/.docker/tls/$NOTARY_URL/ca.crt
 
+systemctl restart docker
+
 # Deploy image
 # Create tanzu projetc in Harbor
 docker login $HARBOR_URL -u admin
@@ -232,6 +234,7 @@ docker push $HARBOR_URL/tanzu/busybox:1.34.1
 
 # Add certificate to Worker nodes - TKGm
 # https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-cluster-lifecycle-secrets.html#trust-custom-ca-certificates-on-cluster-nodes-3
+# https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-cluster-lifecycle-secrets.html#add-custom-ca-certificate-trust-to-existing-clusters-9
 # https://vmware.slack.com/archives/CSZCCLW0P/p1625502325185600
 cp $TANZU_TOOLS_FILES_PATH/scripts/data/custom-ca-overlay.yaml ~/.config/tanzu/tkg/providers/ytt/03_customizations/
 cp harbor.crt ~/.config/tanzu/tkg/providers/ytt/03_customizations/tkg-custom-ca.pem

@@ -48,6 +48,9 @@ export INSTALL_REGISTRY_HOSTNAME=registry.tanzu.vmware.com
 export INSTALL_REGISTRY_USERNAME=$TANZU_NET_USER
 export INSTALL_REGISTRY_PASSWORD=$TANZU_NET_PASSWORD
 
+# Check if it needs a custom CA, if so follow the doc
+# https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.3/cluster-essentials/GUID-deploy.html#deploy-onto-cluster-5
+
 # Add the Tanzu Application Platform package repository
 export INSTALL_BUNDLE=registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9
 cd $HOME/tanzu-cluster-essentials
@@ -121,6 +124,7 @@ tanzu package install tap \
 tanzu package installed get tap -n tap-install
 tanzu package installed list -A
 kubectl describe PackageInstall <package-name> -n tap-install
+# kubectl describe PackageInstall fluxcd-source-controller -n tap-install
 
 # Set up developer namespaces to use installed packages
 # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-set-up-namespaces.html
