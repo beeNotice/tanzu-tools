@@ -1,24 +1,21 @@
 # Create Namespace - prod
 
 # Connect
-sudo su tkgs
-cd
-
 sh login-mgmt.sh
-kctx 10.220.1.226
+kctx 10.220.50.98
 
 # Deploy Cluster
-k apply -f workload-prod-tanzu.yaml
+k apply -f /mnt/c/Dev/workspaces/tanzu-tools/tkgs/data/workload-prod-tanzu.yaml
 k get tkc -n prod
 
 # Connect
 sh login-cluster-prod.sh
+kctx tanzu-cluster-prod
 
+# Day 2
+kctx 10.220.50.98
 - scale
-- upgrade
 - delete
 
 # Release
 k get tkr
-
-k get nodes

@@ -1,13 +1,14 @@
 # Install
-# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scc-install-ootb-sc-wtest-scan.html
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/scc-install-ootb-sc-wtest-scan.html
+# tanzu package available get -n tap-install ootb-supply-chain-testing-scanning.tanzu.vmware.com/0.11.2 --values-schema
 tanzu package install ootb-supply-chain-testing-scanning \
   --package-name ootb-supply-chain-testing-scanning.tanzu.vmware.com \
-  --version 0.10.5 \
+  --version 0.11.2 \
   --namespace tap-install \
   --values-file $TAP_FILES_PATH/data/ootb-supply-chain-testing-scanning-values.yaml
 
 # Check
-# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scc-ootb-supply-chain-testing-scanning.html
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/scc-ootb-supply-chain-testing-scanning.html
 tanzu apps cluster-supply-chain list
 k get ClusterSupplyChain -A
 k get ClusterSupplyChain source-test-scan-to-url -o yaml
@@ -36,5 +37,3 @@ tanzu package installed update tap \
      --values-file $TAP_FILES_PATH/data/tap-values-full.yml \
      -n tap-install
 
-# Deploy workload (check that apps.tanzu.vmware.com/has-tests: "true")
-tanzu apps workload create -f workload.yaml -y

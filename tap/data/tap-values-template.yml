@@ -1,31 +1,25 @@
 profile: full
 
+excluded_packages:
+  - learningcenter.tanzu.vmware.com
+  - workshops.learningcenter.tanzu.vmware.com
+
 shared:
   ingress_domain: tanzu.beenotice.eu
   image_registry:
     project_path: "fmartin.azurecr.io/fmartin/supply-chain"
-    username: "REPLACE_ME"
-    password: "REPLACE_ME"
-appliveview:
-  ingressEnabled: "true"
-appliveview_connector:
-  backend:
-    sslDisabled: "true"
+    username: "FILL_ME"
+    password: "FILL_ME"
 
 # Installation fails if this is not set to true
 ceip_policy_disclosed: true
-excluded_packages:
-  - learningcenter.tanzu.vmware.com
-  - workshops.learningcenter.tanzu.vmware.com
-  - policy.apps.tanzu.vmware.com
-  - image-policy-webhook.signing.apps.tanzu.vmware.com
 
 buildservice:
   kp_default_repository: "fmartin.azurecr.io/fmartin/build-service/"
-  kp_default_repository_username: "REPLACE_ME"
-  kp_default_repository_password: "REPLACE_ME"
-  tanzunet_username: "REPLACE_ME"
-  tanzunet_password: "REPLACE_ME"
+  kp_default_repository_username: "FILL_ME"
+  kp_default_repository_password: "FILL_ME"
+  tanzunet_username: "FILL_ME"
+  tanzunet_password: "FILL_ME"
 
 supply_chain: basic
 
@@ -40,30 +34,33 @@ ootb_supply_chain_basic:
 tap_gui:
   service_type: ClusterIP
   app_config:
-    app:
-      baseUrl: http://tap-gui.tanzu.beenotice.eu
+    customize:
+      custom_name: Fabien TAP Demo
     proxy:
       /metadata-store:
         target: https://metadata-store-app.metadata-store:8443/api/v1
         changeOrigin: true
         secure: false
         headers:
-          Authorization: "Bearer REPLACE_ME"
+          Authorization: "Bearer FILL_ME"
           X-Custom-Source: project-star
+    auth:
+      environment: development
+      providers:
+        github:
+          development:
+            clientId: "FILL_ME"
+            clientSecret: "FILL_ME"
     integrations:
       github:
         - host: github.com
-          token: REPLACE_ME
+          token: FILL_ME
     catalog:
       locations:
         - type: url
           target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
         - type: url
           target: https://github.com/beeNotice/hungryman/blob/main/catalog/catalog-info.yaml
-    backend:
-      baseUrl: http://tap-gui.tanzu.beenotice.eu
-      cors:
-        origin: http://tap-gui.tanzu.beenotice.eu
 
 grype:
   namespace: "dev"
@@ -81,7 +78,7 @@ cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 metadata_store:
-  ns_for_export_app_cert: "dev"
+  ns_for_export_app_cert: "*"
   app_service_type: ClusterIP
 
 scanning:
@@ -90,4 +87,11 @@ scanning:
 
 api_portal:
   apiPortalServer:
-    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://tanzu-app-deploy-dev.tanzu.beenotice.eu/v3/api-docs"
+    trustInsecureSourceUrls: true
+    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,https://tanzu-app-deploy.dev.tanzu.beenotice.eu/v3/api-docs"
+
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/application-accelerator-configuration.html
+package_overlays:
+  - name: tap-gui
+    secrets:
+      - name: patch-tap-gui-timeout

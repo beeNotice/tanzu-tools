@@ -21,3 +21,6 @@ docker login -u fmartin@vmware.com registry.tanzu.vmware.com
 docker login -u fma harbor.withtanzu.com
 
 kp import -f tap-descriptor-<version>.yaml
+
+# Remove TAP
+tanzu package installed delete tap -n tap-install

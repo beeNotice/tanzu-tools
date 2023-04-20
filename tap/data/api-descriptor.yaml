@@ -1,0 +1,18 @@
+apiVersion: apis.apps.tanzu.vmware.com/v1alpha1
+kind: APIDescriptor
+metadata:
+  name: tanzu-simple-api # name of your APIDescriptor
+spec:
+  type: openapi # type of the API spec. oneOf(openapi, grpc, asyncapi, graphql)
+  description: The Tanzu Simple API # description for the API exposed
+  system: tanzu-app-system # system that the API is part of
+  owner: default-team # person/team that owns the API
+  location:
+    path: "/v3/api-docs" # sub-path where the API spec is available
+    baseURL: # base URL object where the API spec is available. oneOf(url, ref)
+      #url: https://tanzu-app-deploy.dev.tanzu.beenotice.eu
+      ref: # object ref to oneOf(HTTPProxy, Knative Service, Ingress)
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: tanzu-app-deploy
+        namespace: dev

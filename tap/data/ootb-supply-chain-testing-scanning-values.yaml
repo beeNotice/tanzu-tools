@@ -7,7 +7,7 @@ gitops:
   repository_owner: beeNotice
   repository_name: tanzu-app-deploy
   branch: main
-  user_name: tanzu-test
-  user_email: tanzu-test@cluster.azure
+  user_name: tap-test
+  user_email: tap@vmware.com
   commit_message: "TAP - New version"
   ssh_secret: git-ssh

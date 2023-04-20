@@ -16,21 +16,21 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
-        resources:
-          limits:
-            cpu: 250m
-            memory: 256Mi
+        - image: nginx
+          name: nginx
+          resources:
+            limits:
+              cpu: 250m
+              memory: 256Mi
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm: 
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - nginx
-              topologyKey: "kubernetes.io/hostname"
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - nginx
+                topologyKey: "kubernetes.io/hostname"

@@ -14,3 +14,7 @@ spec:
       url: https://github.com/beeNotice/tanzu-simple
       ref:
         branch: main
+  build:
+    env:
+      - name: BP_JVM_VERSION
+        value: "17.*"

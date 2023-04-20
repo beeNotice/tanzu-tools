@@ -28,6 +28,7 @@ http://tap-gui.tanzu.beenotice.eu/catalog?filters%5Bkind%5D=component&filters%5B
 # Access APIs
 http://tap-gui.tanzu.beenotice.eu/api-docs?filters%5Bkind%5D=api&filters%5Buser%5D=all
 http://api-portal.tanzu.beenotice.eu/
+- Portal
 
 ###########################################
 # Supply Chain
@@ -54,9 +55,6 @@ http://tap-gui.tanzu.beenotice.eu/supply-chain
 ###########################################
 # Cloud Native Buildpacks
 ###########################################
-# Check Open SSL version
-http://tap-gui.tanzu.beenotice.eu/catalog?filters%5Bkind%5D=component&filters%5Buser%5D=owned
-
 https://buildpacks.io/
 
 # Current Status
@@ -67,7 +65,7 @@ kp build status tanzu-app-deploy -n dev
 # Patch
 k get ClusterBuilder default -o yaml
 kp clusterstack list
-kp clusterbuilder patch default --stack new
+kp clusterbuilder patch default --stack base
 
 # Check as above
 
@@ -80,7 +78,7 @@ https://github.com/beeNotice/tanzu-app-deploy
 k apply -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k get pods -n prod
 
-http://tanzu-app-deploy-prod.tanzu.beenotice.eu/
+http://tanzu-app-deploy.prod.tanzu.beenotice.eu/
 
 PPT | Summary
   - TBS
@@ -91,7 +89,7 @@ PPT | Summary
 # Knative - Autoscaling
 ###########################################
 # Prime
-http://tanzu-app-deploy-prod.tanzu.beenotice.eu/prime/900003883
+http://tanzu-app-deploy.prod.tanzu.beenotice.eu/prime/900003883
 
 # Run performance
 watch kubectl get pods --selector=app.kubernetes.io/component=run -n prod
@@ -102,4 +100,4 @@ watch kubectl get pods --selector=app.kubernetes.io/component=run -n prod
 k delete -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k delete -f $TANZU_APP_FILES_PATH/config/workload.yaml
 
-kp clusterbuilder patch default --stack default
+kp clusterbuilder patch default --stack old

@@ -1,5 +1,6 @@
 == Architecture
 * https://learn.microsoft.com/fr-fr/azure/spring-apps/reference-architecture?tabs=azure-spring-enterprise
+* https://spring.p2hp.com/cloud.html
 
 == Spring Runtime
 * https://tanzu.vmware.com/spring-runtime
@@ -9,12 +10,12 @@
 * https://buildpacks.io/
 * https://tanzu.vmware.com/developer/guides/cnb-what-is/
 * https://spring.io/blog/2020/01/27/creating-docker-images-with-spring-boot-2-3-0-m1
+* https://github.com/beeNotice/tanzu-asa/
+* https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default
 
 == Service Registry
-* https://learn.microsoft.com/en-us/azure/spring-apps/how-to-enterprise-service-registry?tabs=Portal
-* https://github.com/beeNotice/tanzu-asa/blob/main/hello-service/src/main/java/com/tanzu/asa/hello/resource/HelloResource.java
+* Slide
 * https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default/service-instances/hello-service
-* https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default/service-instances/invoke-hello
 * https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default/invoke-hello
 
 == Application Configuration Service
@@ -22,14 +23,14 @@
 * https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default/
 * https://github.com/beeNotice/tanzu-asa/tree/main/config
 
+export SPRING_APPS_TEST_ENDPOINT=$(az spring test-endpoint list \
+--name ${SPRING_APPS_SERVICE} \
+--resource-group ${RESOURCE_GROUP} | jq -r '.primaryTestEndpoint')
 curl ${SPRING_APPS_TEST_ENDPOINT}/${HELLO_SERVICE_APP}/default/actuator/refresh -d {} -H "Content-Type: application/json"
-https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default/
-
 
 == Spring Cloud Gateway
 * https://docs.vmware.com/en/VMware-Spring-Cloud-Gateway-for-Kubernetes/index.html
-** Configuring Gateway Routes
-** Commercial Route Filters
+* https://docs.vmware.com/en/VMware-Spring-Cloud-Gateway-for-Kubernetes/2.0/scg-k8s/GUID-guides-filters-traffic-control.html#circuitbreaker
 * https://asa-tanzu-fmartin-gateway-70d55.svc.azuremicroservices.io/
 * https://asa-tanzu-fmartin-gateway-70d55.svc.azuremicroservices.io/rate-limit
 
@@ -38,4 +39,7 @@ https://asa-tanzu-fmartin.test.azuremicroservices.io/hello-service/default/
 
 == Developer Tools
 * Accelerators
+** https://github.com/vmware-tanzu/application-accelerator-samples
+** https://asa-tanzu-fmartin-devtoolportal-0ca5a.svc.azuremicroservices.io/create
 * Live View
+** https://asa-tanzu-fmartin-devtoolportal-0ca5a.svc.azuremicroservices.io/app-live-view
