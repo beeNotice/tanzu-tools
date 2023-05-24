@@ -1,97 +1,24 @@
-profile: full
+tap_install:
+  sensitive_values:
+    shared:
+      image_registry:
+        username: ""
+        password: ""
 
-excluded_packages:
-  - learningcenter.tanzu.vmware.com
-  - workshops.learningcenter.tanzu.vmware.com
+    buildservice:
+      kp_default_repository_username: ""
+      kp_default_repository_password: ""
 
-shared:
-  ingress_domain: tanzu.beenotice.eu
-  image_registry:
-    project_path: "fmartin.azurecr.io/fmartin/supply-chain"
-    username: "FILL_ME"
-    password: "FILL_ME"
-
-# Installation fails if this is not set to true
-ceip_policy_disclosed: true
-
-buildservice:
-  kp_default_repository: "fmartin.azurecr.io/fmartin/build-service/"
-  kp_default_repository_username: "FILL_ME"
-  kp_default_repository_password: "FILL_ME"
-  tanzunet_username: "FILL_ME"
-  tanzunet_password: "FILL_ME"
-
-supply_chain: basic
-
-ootb_supply_chain_basic:
-  registry:
-    server: "fmartin.azurecr.io"
-    repository: "fmartin/tanzu-app-tap"
-  gitops:
-    # Leave empty for public repos, add a secret for private repos.
-    ssh_secret: ""
-
-tap_gui:
-  service_type: ClusterIP
-  app_config:
-    customize:
-      custom_name: Fabien TAP Demo
-    proxy:
-      /metadata-store:
-        target: https://metadata-store-app.metadata-store:8443/api/v1
-        changeOrigin: true
-        secure: false
-        headers:
-          Authorization: "Bearer FILL_ME"
-          X-Custom-Source: project-star
-    auth:
-      environment: development
-      providers:
-        github:
-          development:
-            clientId: "FILL_ME"
-            clientSecret: "FILL_ME"
-    integrations:
-      github:
-        - host: github.com
-          token: FILL_ME
-    catalog:
-      locations:
-        - type: url
-          target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
-        - type: url
-          target: https://github.com/beeNotice/hungryman/blob/main/catalog/catalog-info.yaml
-
-grype:
-  namespace: "dev"
-  targetImagePullSecret: "registry-credentials"
-
-contour:
-  envoy:
-    service:
-      type: LoadBalancer
-
-cnrs:
-  provider: local
-  domain_name: "tanzu.beenotice.eu"
-  # Fix domain template for TSL certficates
-  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-
-metadata_store:
-  ns_for_export_app_cert: "*"
-  app_service_type: ClusterIP
-
-scanning:
-  metadataStore:
-    url: "" # Disable embedded integration since it's deprecated
-
-api_portal:
-  apiPortalServer:
-    trustInsecureSourceUrls: true
-    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,https://tanzu-app-deploy.dev.tanzu.beenotice.eu/v3/api-docs"
-
-# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/application-accelerator-configuration.html
-package_overlays:
-  - name: tap-gui
-    secrets:
-      - name: patch-tap-gui-timeout
+    tap_gui:
+      app_config:
+        auth:
+          environment: development
+          providers:
+            github:
+              development:
+                clientId: ""
+                clientSecret: ""
+        integrations:
+          github:
+            - host: github.com
+              token:

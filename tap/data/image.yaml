@@ -1,0 +1,18 @@
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tanzu-simple
+  namespace: dev
+spec:
+  tag: fmartin.azurecr.io/fmartin/tanzu-app-tap/tanzu-simple
+  builder:
+    kind: ClusterBuilder
+    name: default
+  source:
+    git:
+      url: https://github.com/beeNotice/tanzu-simple
+      revision: main
+  build:
+    env:
+      - name: BP_JVM_VERSION
+        value: 17.*

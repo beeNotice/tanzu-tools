@@ -1,0 +1,14 @@
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: cnb-nodejs
+  namespace: dev
+spec:
+  tag: fmartin.azurecr.io/fmartin/tanzu-app-tap/cnb-nodejs
+  builder:
+    kind: ClusterBuilder
+    name: default
+  source:
+    git:
+      url: https://github.com/Azure-Samples/nodejs-docs-hello-world
+      revision: main

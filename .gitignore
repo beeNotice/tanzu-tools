@@ -8,4 +8,5 @@ terraform.tfstate.backup
 .terraform.lock.hcl
 .vscode
 *secret.yaml
+tap-sensitive-values.yaml
 tkgm/data/byoi/vsphere.json

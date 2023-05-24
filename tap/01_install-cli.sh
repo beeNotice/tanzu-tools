@@ -51,6 +51,15 @@ curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/instal
 # Java
 sudo apt install openjdk-17-jdk-headless
 
+# Age
+# https://github.com/FiloSottile/age#installation
+brew install age
+
+# SOPS
+# https://github.com/mozilla/sops/releases
+wget https://github.com/mozilla/sops/releases/download/v3.7.3/sops_3.7.3_amd64.deb
+sudo dpkg -i sops_3.7.3_amd64.deb
+
 # Install kp
 # https://network.pivotal.io/products/build-service/
 # wget -O kp "$KP_URL"

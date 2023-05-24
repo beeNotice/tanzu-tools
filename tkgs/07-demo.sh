@@ -1,11 +1,13 @@
 # Create Namespace - prod
+CONTROL_PLANE_IP=10.220.35.162
+TANZU_TOOLS_FILES_PATH="/mnt/c/Dev/workspaces/tanzu-tools"
 
 # Connect
 sh login-mgmt.sh
-kctx 10.220.50.98
+kctx $CONTROL_PLANE_IP
 
 # Deploy Cluster
-k apply -f /mnt/c/Dev/workspaces/tanzu-tools/tkgs/data/workload-prod-tanzu.yaml
+k apply -f $TANZU_TOOLS_FILES_PATH/tkgs/data/workload-prod-tanzu.yaml
 k get tkc -n prod
 
 # Connect
@@ -13,7 +15,7 @@ sh login-cluster-prod.sh
 kctx tanzu-cluster-prod
 
 # Day 2
-kctx 10.220.50.98
+kctx $CONTROL_PLANE_IP
 - scale
 - delete
 

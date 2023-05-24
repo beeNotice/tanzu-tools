@@ -33,16 +33,8 @@ http://api-portal.tanzu.beenotice.eu/
 ###########################################
 # Supply Chain
 ###########################################
-# Supply chain details
-# C:\Users\fmartin\OneDrive - VMware, Inc\Meetings\Fabien\VMware Tanzu - TAP - fmartin.pptx
-PPT | Path to Production with TAP
-  - Supply Chain by type of applications
-  - Customizable
-  - Integrate with your ecosystem
-  - Multi-env deployment
-  - Orchestration vs Choreography
-  - The Right Abstraction per Persona
-  - Cloud Native Buildpacks
+# Supply Chain
+tanzu apps workload get tanzu-app-deploy --namespace dev
 
 # Supply Chain Configuration
 tanzu apps cluster-supply-chain list
@@ -68,6 +60,7 @@ kp clusterstack list
 kp clusterbuilder patch default --stack base
 
 # Check as above
+kp clusterstack list
 
 ###########################################
 # Deployment to Prod

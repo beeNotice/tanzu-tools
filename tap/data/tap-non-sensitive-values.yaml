@@ -1,0 +1,70 @@
+tap_install:
+  values:
+    profile: full
+
+    excluded_packages:
+      - learningcenter.tanzu.vmware.com
+      - workshops.learningcenter.tanzu.vmware.com
+
+    shared:
+      ingress_domain: tanzu.beenotice.eu
+      image_registry:
+        project_path: "fmartin.azurecr.io/fmartin"
+
+    ceip_policy_disclosed: true
+
+    buildservice:
+      kp_default_repository: "fmartin.azurecr.io/fmartin/build-service/"
+
+    supply_chain: basic
+
+    ootb_supply_chain_basic:
+      registry:
+        server: "fmartin.azurecr.io"
+        repository: "fmartin/tanzu-app-tap"
+      gitops:
+        # Leave empty for public repos, add a secret for private repos.
+        ssh_secret: ""
+
+    tap_gui:
+      service_type: ClusterIP
+      metadataStoreAutoconfiguration: true
+      app_config:
+        customize:
+          custom_name: Fabien TAP Demo
+        organization:
+          name: "beeNotice"
+        catalog:
+          locations:
+            - type: url
+              target: https://github.com/beeNotice/tap-catalog/blob/main/catalog-info.yaml
+            - type: url
+              target: https://github.com/beeNotice/hungryman/blob/main/catalog/catalog-info.yaml
+
+    grype:
+      namespace: "default"
+      targetImagePullSecret: "registry-credentials"
+
+    contour:
+      envoy:
+        service:
+          type: LoadBalancer
+
+    metadata_store:
+      ns_for_export_app_cert: "*"
+      app_service_type: ClusterIP
+
+    scanning:
+      metadataStore:
+        url: "" # Disable embedded integration since it's deprecated
+
+    api_portal:
+      apiPortalServer:
+        trustInsecureSourceUrls: true
+        sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,https://tanzu-app-deploy.dev.tanzu.beenotice.eu/v3/api-docs"
+
+    # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/application-accelerator-configuration.html
+#    package_overlays:
+#      - name: tap-gui
+#        secrets:
+#          - name: patch-tap-gui-timeout

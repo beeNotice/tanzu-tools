@@ -7,7 +7,7 @@ CLUSTER_NAME=tanzu-demo-fmartin
 ###########################################
 # TAP
 ###########################################
-TAP_VERSION=1.4.2
+TAP_VERSION=1.5.0
 
 # Folder to put cli binaries
 BIN_FOLDER=/usr/local/bin/
@@ -23,6 +23,8 @@ TANZU_TOOLS_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-tools/"
 export TAP_FILES_PATH="$TANZU_TOOLS_FILES_PATH/tap/"
 # Path to app files
 TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-simple"
+
+TAP_GITOPS_FILES_PATH="/mnt/c/Dev/workspaces/tap-gitops"
 
 ###########################################
 # Imports
