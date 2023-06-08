@@ -91,3 +91,12 @@ k describe nodes
 k top nodes
 => Chances are that the Pods are not well distributes
 => Delete pods on the overloaded Node
+
+# Kapp
+k get app -A
+
+# Package Install
+kubectl get pkgi -n tap-install
+
+# GitOps Sync
+k get app -n tanzu-sync sync -o=jsonpath='{.status.usefulErrorMessage}'

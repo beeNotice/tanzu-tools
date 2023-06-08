@@ -1,8 +1,14 @@
 ###########################################
-# Azure
+# Cloud
 ###########################################
+# AKS
 RG_NAME=rg-tanzu-demo-14
-CLUSTER_NAME=tanzu-demo-fmartin
+
+# GKE
+COMPUTE_REGION=europe-west9
+COMPUTE_ZONE="$REGION-a"
+
+CLUSTER_NAME=gke-tanzu-demo-fmartin
 
 ###########################################
 # TAP

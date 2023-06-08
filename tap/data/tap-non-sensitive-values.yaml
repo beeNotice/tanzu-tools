@@ -63,6 +63,14 @@ tap_install:
         trustInsecureSourceUrls: true
         sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,https://tanzu-app-deploy.dev.tanzu.beenotice.eu/v3/api-docs"
 
+    # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-gitops-set-up-namespaces.html
+    namespace_provisioner:
+      controller: false
+      gitops_install:
+        ref: origin/main
+        subPath: ns-provisioner
+        url: https://github.com/beeNotice/tap-gitops.git
+
     # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/application-accelerator-configuration.html
 #    package_overlays:
 #      - name: tap-gui

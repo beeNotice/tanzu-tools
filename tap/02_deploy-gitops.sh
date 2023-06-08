@@ -1,10 +1,30 @@
 ###########################################
-# Setup Cluster
+# Setup Cluster AKS
 ###########################################
 # Deploy
 az group create --location francecentral --name ${RG_NAME}
 az aks create --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --node-count 3 --enable-addons monitoring --node-vm-size Standard_DS4_v2 --node-osdisk-size 500
 az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
+
+###########################################
+# Setup Cluster GKE
+###########################################
+# https://cloud.google.com/binary-authorization/docs/getting-started-cli
+# https://cloud.google.com/compute/docs/general-purpose-machines?hl=fr
+REGION=europe-west9
+CLUSTER_ZONE="$REGION-a"
+CLUSTER_NAME=gke-tanzu-demo-fmartin
+
+gcloud container clusters create $CLUSTER_NAME \
+    --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
+    --region $COMPUTE_REGION \
+    --node-locations $COMPUTE_ZONE \
+    --machine-type "e2-standard-8" \
+    --num-nodes "3"
+  
+gcloud container clusters get-credentials \
+    --region $COMPUTE_REGION \
+    $CLUSTER_NAME
 
 ###########################################
 # Deploy
@@ -96,7 +116,7 @@ git add . && git commit -m "Initialize Tanzu GitOps RI"
 git push -u origin main
 
 ./setup-repo.sh $CLUSTER_NAME sops
-git add . && git commit -m "Add tanzu-demo-fmartin"
+git add . && git commit -m "Add $CLUSTER_NAME"
 git push -u origin
 
 ###########################################
@@ -134,8 +154,34 @@ cd $TAP_GITOPS_FILES_PATH/clusters/$CLUSTER_NAME
 ./tanzu-sync/scripts/configure.sh
 
 git add .
-git commit -m "Configure install of TAP 1.5.0"
+git commit -m "Configure install of TAP $TAP_VERSION"
 git push
+
+###########################################
+# General configuration
+###########################################
+
+kubectl create namespace tap-install
+
+# Git secret
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-customize-installation.html#git-import-user
+# https://vmware.slack.com/archives/C02D60T1ZDJ/p1682367234403699
+# https://vmware.slack.com/archives/C02D60T1ZDJ/p1686000062935879?thread_ts=1685683898.379399&cid=C02D60T1ZDJ
+kubectl create secret generic git-ssh \
+--from-file=ssh-privatekey=$HOME/.ssh/id_ed25519 \
+--from-file=identity=$HOME/.ssh/id_ed25519 \
+--from-file=identity.pub=$HOME/.ssh/id_ed25519.pub \
+--from-file=known_hosts=$HOME/known_hosts \
+--type=kubernetes.io/ssh-auth \
+-n tap-install
+kubectl annotate secret git-ssh tekton.dev/git-0='github.com' -n tap-install
+
+k get secret git-ssh -n tap-install -o yaml > $TAP_FILES_PATH/data/github-secret.yaml
+sops --encrypt $TAP_FILES_PATH/data/github-secret.yaml > $TAP_FILES_PATH/data/github-secret.sops.yaml
+cp $TAP_FILES_PATH/data/github-secret.sops.yaml $TAP_GITOPS_FILES_PATH/clusters/$CLUSTER_NAME/cluster-config/config/custom/
+
+export SOPS_AGE_KEY_FILE=$HOME/tmp-enc/key.txt
+sops --decrypt $TAP_GITOPS_FILES_PATH/clusters/$CLUSTER_NAME/cluster-config/config/custom/github-secret.sops.yaml
 
 ###########################################
 # Deployment
@@ -150,6 +196,8 @@ tanzu package installed list -A
 kubectl describe PackageInstall <package-name> -n tap-install
 # kubectl describe PackageInstall contour -n tap-install
 
+# k9s 
+: pkgi
 
 ###########################################
 # Deployment
@@ -170,3 +218,12 @@ curl -H "host: tap-gui.tanzu.beenotice.eu" $ENVOY_IP
 https://tap-gui.tanzu.beenotice.eu/
 
 
+###########################################
+# Install individual packages
+###########################################
+# Continue to 03_supply-chain-install.sh
+
+###########################################
+# Checks
+###########################################
+kubectl get pipeline.tekton.dev,scanpolicies -n dev

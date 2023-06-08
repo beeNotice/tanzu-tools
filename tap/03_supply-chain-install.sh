@@ -1,6 +1,7 @@
 # Install
-# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/scc-install-ootb-sc-wtest-scan.html
-# tanzu package available get -n tap-install ootb-supply-chain-testing-scanning.tanzu.vmware.com/0.11.2 --values-schema
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scc-install-ootb-sc-wtest-scan.html
+# tanzu package available get -n tap-install ootb-supply-chain-testing-scanning.tanzu.vmware.com
+# tanzu package available get -n tap-install ootb-supply-chain-testing-scanning.tanzu.vmware.com/0.12.5 --values-schema
 tanzu package install ootb-supply-chain-testing-scanning \
   --package-name ootb-supply-chain-testing-scanning.tanzu.vmware.com \
   --version 0.11.2 \
