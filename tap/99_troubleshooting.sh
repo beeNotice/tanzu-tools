@@ -35,6 +35,8 @@ k describe image.kpack.io -n dev tanzu-java-web-app
 kubectl get clusterbuilder.kpack.io default
 => Ready False
 
+# Remove & reinstall TBS can be as solution
+tanzu package installed delete buildservice -n tap-install
 
 # Delivery not working
 You re using an RSA key with SHA-1, which is no longer allowed. Please use a newer client or a different key type.
@@ -100,3 +102,15 @@ kubectl get pkgi -n tap-install
 
 # GitOps Sync
 k get app -n tanzu-sync sync -o=jsonpath='{.status.usefulErrorMessage}'
+
+# Samples
+# https://github.com/cpage-pivotal/installer/blob/main/clusters/aks-tap-iterate/cluster-config/namespace-provisioner/namespace-resources/secretimport.yaml
+# https://github.com/vmware-tanzu/application-accelerator-samples/tree/main/ns-provisioner-samples
+# https://github.com/tanzu-end-to-end/e2e-tap-gitops/blob/main/clusters/e2e-tap-build-cluster/cluster-config/config/general/secret-overlay-git-auth.yaml
+# https://github.com/tfynes-pivotal/tap-gitops-sc/tree/main/clusters/akslab/cluster-config
+
+# Crossplane
+https://docs.crossplane.io/knowledge-base/guides/troubleshoot/
+
+k get CloudSQLInstance,XPostgreSQLInstance
+k get PostgreSQLInstance -n dev

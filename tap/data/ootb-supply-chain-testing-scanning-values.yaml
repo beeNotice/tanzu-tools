@@ -9,5 +9,5 @@ gitops:
   branch: main
   user_name: tap-test
   user_email: tap@vmware.com
-  commit_message: "TAP - New version"
+  commit_message: "Update from TAP Supply Chain Choreographer"
   ssh_secret: git-ssh

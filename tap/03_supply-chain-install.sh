@@ -14,6 +14,9 @@ tanzu apps cluster-supply-chain list
 k get ClusterSupplyChain -A
 k get ClusterSupplyChain source-test-scan-to-url -o yaml
 
+# Matching Labels
+tanzu apps cluster-supply-chain get source-test-scan-to-url
+
 # Create scan policy
 kubectl apply -f $TAP_FILES_PATH/data/scan-policy.yaml
 k get ScanPolicy -n dev

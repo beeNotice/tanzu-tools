@@ -17,3 +17,9 @@ COMPUTE_ZONE="$REGION-a"
 CLUSTER_NAME=gke-tanzu-demo-fmartin
 
 gcloud container clusters resize $CLUSTER_NAME --region $COMPUTE_REGION --num-nodes 3
+
+
+
+
+# EKS
+eksctl scale nodegroup --cluster=$CLUSTER_NAME --nodes=0 --name=ng-2066c929

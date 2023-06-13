@@ -1,4 +1,10 @@
 ###########################################
+# When moving to 1.6
+# Remove and add uncomment default_parameters
+###########################################
+https://vmware.slack.com/archives/C02D60T1ZDJ/p1686235209358219?thread_ts=1685683898.379399&cid=C02D60T1ZDJ
+
+###########################################
 # Setup Cluster AKS
 ###########################################
 # Deploy
@@ -25,6 +31,25 @@ gcloud container clusters create $CLUSTER_NAME \
 gcloud container clusters get-credentials \
     --region $COMPUTE_REGION \
     $CLUSTER_NAME
+
+###########################################
+# Setup Cluster EKS
+###########################################
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-aws-resources.html
+# https://github.com/tsalm-vmware/tap-install#aws-eks
+eksctl create cluster --name $CLUSTER_NAME --managed --region $AWS_REGION --instance-types t3.xlarge --version 1.24 --with-oidc -N 3
+
+# https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
+eksctl create iamserviceaccount \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster $CLUSTER_NAME \
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  --approve \
+  --role-only \
+  --role-name AmazonEKS_EBS_CSI_DriverRole
+eksctl create addon --name aws-ebs-csi-driver --cluster $CLUSTER_NAME --service-account-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/AmazonEKS_EBS_CSI_DriverRole --force
+
 
 ###########################################
 # Deploy
@@ -217,11 +242,6 @@ ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath=
 curl -H "host: tap-gui.tanzu.beenotice.eu" $ENVOY_IP
 https://tap-gui.tanzu.beenotice.eu/
 
-
-###########################################
-# Install individual packages
-###########################################
-# Continue to 03_supply-chain-install.sh
 
 ###########################################
 # Checks

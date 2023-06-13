@@ -1,4 +1,20 @@
 ###########################################
+# Prerequisites
+###########################################
+# Provision DB
+# https://vmware.slack.com/archives/C02D60T1ZDJ/p1686317496677109
+k apply -f $TAP_FILES_PATH/data/postgresql-gcp.yaml
+tanzu service resource-claim create postgresql-claim \
+  --resource-name cloudsql-postgres-db \
+  --resource-kind Secret \
+  --resource-api-version v1 \
+  --namespace dev
+
+# EKS
+tanzu service class-claim create postgresql-claim --class postgresql-unmanaged --parameter storageGB=5 -n dev
+
+
+###########################################
 # Intro / Context
 ###########################################
 PPT | Introduction
@@ -63,13 +79,13 @@ kp clusterbuilder patch default --stack base
 kp clusterstack list
 
 ###########################################
-# Deployment to Prod
+# Deployment to EKS
 ###########################################
 https://github.com/beeNotice/tanzu-app-deploy
 
-# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.2/tap/GUID-multicluster-getting-started.html
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/multicluster-getting-started.html
 k apply -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
-k get pods -n prod
+k get pods -n dev
 
 http://tanzu-app-deploy.prod.tanzu.beenotice.eu/
 
@@ -92,5 +108,8 @@ watch kubectl get pods --selector=app.kubernetes.io/component=run -n prod
 ###########################################
 k delete -f $TANZU_APP_FILES_PATH/config/deliverable.yaml
 k delete -f $TANZU_APP_FILES_PATH/config/workload.yaml
+
+k delete -f $TAP_FILES_PATH/data/postgresql-gcp.yaml
+tanzu service resource-claim delete postgresql-claim -n dev
 
 kp clusterbuilder patch default --stack old

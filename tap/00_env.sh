@@ -1,6 +1,8 @@
 ###########################################
 # Cloud
 ###########################################
+CLUSTER_NAME=eks-tanzu-run-fmartin
+
 # AKS
 RG_NAME=rg-tanzu-demo-14
 
@@ -8,7 +10,9 @@ RG_NAME=rg-tanzu-demo-14
 COMPUTE_REGION=europe-west9
 COMPUTE_ZONE="$REGION-a"
 
-CLUSTER_NAME=gke-tanzu-demo-fmartin
+# EKS
+AWS_ACCOUNT_ID=521694350784
+AWS_REGION=eu-west-3
 
 ###########################################
 # TAP
@@ -28,7 +32,8 @@ TANZU_TOOLS_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-tools/"
 # Path to k8s deployment files
 export TAP_FILES_PATH="$TANZU_TOOLS_FILES_PATH/tap/"
 # Path to app files
-TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-simple"
+#TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-simple"
+TANZU_APP_FILES_PATH="$WORKSPACE_FILES_PATH/tanzu-app"
 
 TAP_GITOPS_FILES_PATH="/mnt/c/Dev/workspaces/tap-gitops"
 
