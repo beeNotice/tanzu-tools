@@ -37,19 +37,30 @@ sops --encrypt gcp-creds.yaml > $TAP_GITOPS_FILES_PATH/clusters/$CLUSTER_NAME/cl
 k apply -f $TAP_FILES_PATH/data/postgresql-gcp.yaml
 
 # Check
-k get CloudSQLInstance,XPostgreSQLInstance
-k get PostgreSQLInstance -n dev
+k get ClassClaim -n dev
+k get cloudsqlinstance.database.gcp.crossplane.io,xpostgresqlinstances.database.gcp.example.org
 
 tanzu service classes list
-tanzu services claimable list --class cloudsql-postgres -n dev
-
 
 # EKS - Installation
+
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-installing-multicluster.html#add-build-run-and-iterate-clusters-to-tanzu-application-platform-gui-6
+
+
 # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/services-toolkit-how-to-guides-dynamic-provisioning-rds.html
 # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/bitnami-services-tutorials-working-with-bitnami-services.html
 
 kubectl get providers
 tanzu service class list
 
+k get ClassClaim -n dev
+k get xpostgresqlinstance
+
+# EKS
+tanzu service class-claim create postgresql-claim --class postgresql-unmanaged --parameter storageGB=5 -n dev
 
 
+###########################################
+# Live View
+###########################################
+# https://vmware.slack.com/archives/C02D60T1ZDJ/p1684473802063229?thread_ts=1684427309.496589&cid=C02D60T1ZDJ

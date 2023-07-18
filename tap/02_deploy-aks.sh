@@ -192,6 +192,7 @@ tanzu accelerator create tanzu-simple --git-repository https://github.com/beeNot
 # Check
 tanzu accelerator list
 
+
 # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.4/tap/tap-gui-plugins-application-accelerator-git-repo.html
 
 
@@ -212,9 +213,9 @@ tanzu apps workload delete -f $TAP_FILES_PATH/data/workload.yaml -y
 # https://network.tanzu.vmware.com/products/tbs-dependencies#/releases/959846
 # Same credentials as Tanzu Net
 docker login -u fmartin@vmware.com registry.pivotal.io
-kp clusterstack create old \
---build-image registry.pivotal.io/tanzu-base-bionic-stack/build@sha256:63ac574296e1a2032e3a14f7a2a351e771b32de10772cbb699e9f8b38442142f \
---run-image registry.pivotal.io/tanzu-base-bionic-stack/run@sha256:9f4bde6e96bae86246f725d6e76ea39ad460b50356c29869794b642908d641c4
+kp clusterstack create new \
+--build-image registry.pivotal.io/tanzu-base-ubuntu-2204-stack/build@sha256:dae0b3bbbef6673b1074ef089b77d1dcd32e42e1188846b0a8581fe331f14edc \
+--run-image registry.pivotal.io/tanzu-base-ubuntu-2204-stack/run@sha256:3d63cda96ffc311fc0d27f9ff2f5e3c64c484c24dad3fd878e30aa8dd739330c
 
 kp clusterstack list
 kp clusterbuilder patch default --stack old

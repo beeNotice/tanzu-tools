@@ -9,4 +9,4 @@ kubectl apply -f $TAP_FILES_PATH/data/tanzu-app-accelerator/k8s-resource.yaml --
 k get Accelerator -n accelerator-system
 tanzu accelerator list
 # If you don't want to wait for 10 minutes after a Git update
-tanzu accelerator update tanzu-app-demo -n accelerator-system --reconcile
+tanzu accelerator update tanzu-app -n accelerator-system --reconcile

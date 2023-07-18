@@ -113,4 +113,4 @@ k get app -n tanzu-sync sync -o=jsonpath='{.status.usefulErrorMessage}'
 https://docs.crossplane.io/knowledge-base/guides/troubleshoot/
 
 k get CloudSQLInstance,XPostgreSQLInstance
-k get PostgreSQLInstance -n dev
+k get classclaim,PostgreSQLInstance -n dev

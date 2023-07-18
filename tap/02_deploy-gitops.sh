@@ -37,7 +37,7 @@ gcloud container clusters get-credentials \
 ###########################################
 # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-aws-resources.html
 # https://github.com/tsalm-vmware/tap-install#aws-eks
-eksctl create cluster --name $CLUSTER_NAME --managed --region $AWS_REGION --instance-types t3.xlarge --version 1.24 --with-oidc -N 3
+eksctl create cluster --name $CLUSTER_NAME --managed --region $AWS_REGION --instance-types t3.2xlarge --version 1.24 --with-oidc -N 3
 
 # https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html
 eksctl create iamserviceaccount \
@@ -240,8 +240,13 @@ k get HttpProxy -A
 # Access TAP
 ENVOY_IP=$(kubectl get services envoy -n tanzu-system-ingress --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
 curl -H "host: tap-gui.tanzu.beenotice.eu" $ENVOY_IP
+
 https://tap-gui.tanzu.beenotice.eu/
 
+dig @8.8.8.8 tanzu-app-deploy.dev.tanzu-eks.beenotice.eu
+curl -H "host: tanzu-app-deploy.dev.tanzu-eks.beenotice.eu" a7d32c33e836b4d64899aef64c9ea440-709651241.eu-west-3.elb.amazonaws.com
+curl -H "host: tanzu-app-deploy.dev.tanzu-eks.beenotice.eu" 13.39.63.203
+curl tanzu-app-deploy.dev.tanzu-eks.beenotice.eu
 
 ###########################################
 # Checks
